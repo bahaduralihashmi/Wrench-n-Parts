@@ -1,0 +1,41 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#05070A"/>
+      <stop offset="100%" stop-color="#0a0c12"/>
+    </linearGradient>
+    <linearGradient id="streak1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="40%" stop-color="#ff1f1f" stop-opacity="0.6"/>
+      <stop offset="60%" stop-color="#ff1f1f" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+    <linearGradient id="streak2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="30%" stop-color="#ff1f1f" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#ff1f1f" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#ff1f1f" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <ellipse cx="400" cy="250" rx="350" ry="200" fill="url(#glow)"/>
+  <line x1="0" y1="180" x2="800" y2="120" stroke="url(#streak1)" stroke-width="3" transform="rotate(-12 400 250)"/>
+  <line x1="0" y1="280" x2="800" y2="220" stroke="url(#streak2)" stroke-width="4" transform="rotate(-12 400 250)"/>
+  <line x1="0" y1="380" x2="800" y2="320" stroke="url(#streak1)" stroke-width="2" transform="rotate(-12 400 250)"/>
+  <circle cx="250" cy="220" r="90" fill="none" stroke="#222" stroke-width="8"/>
+  <circle cx="250" cy="220" r="70" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+  <circle cx="250" cy="220" r="30" fill="#111" stroke="#333" stroke-width="2"/>
+  <circle cx="450" cy="240" r="85" fill="none" stroke="#1a1a1a" stroke-width="12"/>
+  <circle cx="450" cy="240" r="60" fill="none" stroke="#222" stroke-width="2"/>
+  <circle cx="450" cy="240" r="40" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1"/>
+  <rect x="560" y="160" width="8" height="180" rx="4" fill="#1a1a1a" transform="rotate(-5 564 250)"/>
+  <rect x="580" y="170" width="8" height="160" rx="4" fill="#1a1a1a" transform="rotate(-5 584 250)"/>
+  <rect x="600" y="180" width="8" height="140" rx="4" fill="#1a1a1a" transform="rotate(-5 604 250)"/>
+  <rect x="620" y="190" width="8" height="120" rx="4" fill="#1a1a1a" transform="rotate(-5 624 250)"/>
+  <ellipse cx="600" cy="300" rx="25" ry="40" fill="#111" stroke="#222" stroke-width="2"/>
+  <text x="400" y="440" text-anchor="middle" fill="#ff1f1f" font-family="sans-serif" font-size="14" letter-spacing="4" opacity="0.6">WRENCH N PARTS</text>
+</svg>

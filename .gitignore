@@ -1,0 +1,17 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+node_modules/
+backend/uploads/*
+!backend/uploads/.gitkeep
+.DS_Store
+.idea/
+.vscode/
+*.log
+vercel/.vercel

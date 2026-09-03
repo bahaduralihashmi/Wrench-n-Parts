@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Knowledge Base — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("management", "knowledge-base");
+  const user = await WNP.requireRole(["admin", "management"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const [articles, problems] = await Promise.all([WNP.api.management.kbArticles(), WNP.api.management.kbProblems()]);
+    out.innerHTML = `<h3 class="fw-bold mb-3">Articles</h3>
+      <div class="d-flex justify-content-end mb-2"><button class="btn btn-danger btn-sm" onclick="newA()"><i class="fas fa-plus"></i> New</button></div>
+      <div class="dash-table mb-4"><table class="table mb-0"><thead><tr><th>Title</th><th>Category</th><th>Keywords</th><th></th></tr></thead>
+      <tbody>${(articles.data||[]).map(a => `<tr>
+        <td>${escapeHtml(a.title)}</td>
+        <td>${escapeHtml(a.category)}</td>
+        <td>${escapeHtml(a.keywords||"")}</td>
+        <td><button class="btn btn-sm btn-outline-danger" onclick="del(${a.id})">Delete</button></td>
+      </tr>`).join("")}</tbody></table></div>
+      <h3 class="fw-bold mb-3">Problems</h3>
+      <div class="dash-table"><table class="table mb-0"><thead><tr><th>System</th><th>Problem</th><th>Solution</th></tr></thead>
+      <tbody>${(problems.data||[]).map(p => `<tr>
+        <td>${escapeHtml(p.system)}</td>
+        <td>${escapeHtml(p.problem)}</td>
+        <td>${escapeHtml((p.solution||"").substring(0,80))}</td>
+      </tr>`).join("")}</tbody></table></div>`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+async function newA(){
+  const title = prompt("Title:"); if (!title) return;
+  const content = prompt("Content:"); if (!content) return;
+  const category = prompt("Category (repair_guide/service_interval/torque_spec/general):","general") || "general";
+  try { await WNP.api.management.saveKbArticle({title,content,category}); location.reload(); } catch (e) { WNP.flash(e.message,"danger"); }
+}
+async function del(id){ if(!confirm("Delete?"))return; try{await WNP.api.management.deleteKbArticle(id);location.reload();}catch(e){WNP.flash(e.message,"danger");} }
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

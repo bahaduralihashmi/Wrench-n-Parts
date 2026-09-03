@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Shopkeeper Dashboard — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("shopkeeper", "dashboard");
+  const user = await WNP.requireRole(["shopkeeper"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const [shop, products, orders] = await Promise.all([
+      WNP.api.shops.mine().catch(() => ({ data: null })),
+      WNP.api.products.list({ limit: 1000 }),
+      WNP.api.orders.list({ limit: 50 }),
+    ]);
+    out.innerHTML = `
+      <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Products</small><h3>${(products.data || []).length}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Orders</small><h3>${(orders.data || []).length}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Shop status</small><h3 class="text-capitalize">${(shop.data && shop.data.status) || "—"}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Role</small><h3>${user.role}</h3></div></div>
+      </div>
+      <div class="dash-table p-3">
+        <h5 class="fw-bold mb-3">Recent Orders</h5>
+        ${(orders.data || []).length ? `<table class="table table-sm"><thead><tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>${orders.data.slice(0, 10).map(o => `<tr><td>#${o.order_id}</td><td>${escapeHtml(o.customer_name || "")}</td><td>${WNP.money(o.total_amount)}</td><td><span class="badge bg-info">${o.order_status}</span></td><td>${WNP.timeAgo(o.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="text-muted">No orders yet</p>`}
+      </div>`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

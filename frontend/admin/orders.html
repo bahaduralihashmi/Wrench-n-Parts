@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Orders — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("admin", "orders");
+  const user = await WNP.requireRole(["admin", "management"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const r = await WNP.api.orders.list({ limit: 200 });
+    const items = r.data || [];
+    out.innerHTML = `<h3 class="fw-bold mb-3">Orders</h3>
+      ${items.length ? `<div class="dash-table"><table class="table mb-0"><thead><tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Payment</th><th>Date</th></tr></thead>
+      <tbody>${items.map(o => `<tr>
+        <td>#${o.order_id}</td>
+        <td>${escapeHtml(o.customer_name || "")}</td>
+        <td>${WNP.money(o.total_amount)}</td>
+        <td><select class="form-select form-select-sm" onchange="setS(${o.order_id},'order_status',this.value)">
+          ${['pending','confirmed','processing','shipped','delivered','cancelled'].map(s => `<option value="${s}" ${o.order_status===s?'selected':''}>${s}</option>`).join('')}
+          </select></td>
+        <td><select class="form-select form-select-sm" onchange="setS(${o.order_id},'payment_status',this.value)">
+          ${['pending','paid','failed','refunded'].map(s => `<option value="${s}" ${o.payment_status===s?'selected':''}>${s}</option>`).join('')}
+          </select></td>
+        <td>${WNP.timeAgo(o.created_at)}</td>
+      </tr>`).join("")}</tbody></table></div>` : `<p class="text-muted">No orders</p>`}`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+async function setS(id,k,v){ try{await WNP.api.orders.update(id,{[k]:v});WNP.flash("Updated","success");}catch(e){WNP.flash(e.message,"danger");} }
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

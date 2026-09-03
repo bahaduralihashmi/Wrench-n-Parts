@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Inventory — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("shopkeeper", "inventory");
+  const user = await WNP.requireRole(["shopkeeper", "admin", "management"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const r = await WNP.api.products.list({ limit: 500 });
+    const items = r.data || [];
+    out.innerHTML = `<h3 class="fw-bold mb-3">Inventory</h3>
+      <div class="dash-table"><table class="table mb-0"><thead><tr><th>Name</th><th>Stock</th><th>Price</th><th>Adjust</th></tr></thead>
+      <tbody>${items.map(p => `<tr>
+        <td>${escapeHtml(p.product_name)}</td>
+        <td><strong>${p.stock}</strong></td>
+        <td>${WNP.money(p.price)}</td>
+        <td><button class="btn btn-sm btn-outline-success" onclick="bump(${p.product_id}, 10)">+10</button>
+            <button class="btn btn-sm btn-outline-warning" onclick="bump(${p.product_id}, -1)">-1</button></td>
+      </tr>`).join("")}</tbody></table></div>`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+async function bump(id, delta){
+  // Use generic product update to adjust stock
+  try {
+    // We don't know current stock on client; use update endpoint by re-reading via list (already loaded)
+    const all = (await WNP.api.products.list({limit:500})).data;
+    const p = all.find(x => x.product_id === id);
+    if (!p) return;
+    await WNP.api.products.update(id, { stock: Math.max(0, p.stock + delta) });
+    location.reload();
+  } catch (e) { WNP.flash(e.message, "danger"); }
+}
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Products — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("shopkeeper", "products");
+  const user = await WNP.requireRole(["shopkeeper", "admin", "management"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const r = await WNP.api.products.list({ limit: 500 });
+    const items = r.data || [];
+    out.innerHTML = `<div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold mb-0">Products</h3>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#newP"><i class="fas fa-plus me-1"></i>New Product</button>
+      </div>
+      <div class="dash-table"><table class="table table-hover mb-0"><thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+      <tbody>${items.map(p => `<tr>
+        <td>${p.product_id}</td>
+        <td>${escapeHtml(p.product_name)}</td>
+        <td>${WNP.money(p.price)}</td>
+        <td>${p.stock}</td>
+        <td><span class="badge bg-info">${p.status}</span></td>
+        <td><button class="btn btn-sm btn-outline-danger" onclick="del(${p.product_id})">Delete</button></td>
+      </tr>`).join("")}</tbody></table></div>
+      <div class="modal fade" id="newP"><div class="modal-dialog"><div class="modal-content">
+        <form id="np" class="modal-body">
+          <h5>New product</h5>
+          <div class="mb-2"><input class="form-control" name="product_name" placeholder="Name" required></div>
+          <div class="mb-2"><textarea class="form-control" name="description" placeholder="Description"></textarea></div>
+          <div class="mb-2"><input class="form-control" type="number" step="0.01" name="price" placeholder="Price" required></div>
+          <div class="mb-2"><input class="form-control" type="number" name="stock" placeholder="Stock" value="0"></div>
+          <div class="mb-2"><input class="form-control" name="brand" placeholder="Brand"></div>
+          <button class="btn btn-danger w-100">Create</button>
+        </form>
+      </div></div></div>`;
+    document.getElementById("np").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const payload = Object.fromEntries(fd.entries());
+      payload.price = parseFloat(payload.price);
+      payload.stock = parseInt(payload.stock);
+      try { await WNP.api.products.create(payload); location.reload(); }
+      catch (err) { WNP.flash(err.message, "danger"); }
+    });
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+async function del(id){ if(!confirm("Delete?"))return; try{await WNP.api.products.delete(id);location.reload();}catch(e){WNP.flash(e.message,"danger");} }
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MechBot — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+<link href="../css/chatbot-response.css" rel="stylesheet">
+<style>
+#chatbox { height:60vh; overflow-y:auto; background:#f5f7fb; padding:16px; border-radius:12px; }
+.msg { margin-bottom:10px; max-width:80%; padding:10px 14px; border-radius:14px; }
+.msg.user { background:#dc3545; color:#fff; margin-left:auto; }
+.msg.bot { background:#fff; border:1px solid #eee; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("customer", "chatbot");
+  const user = await WNP.requireRole(["customer"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  out.innerHTML = `
+    <h3 class="fw-bold mb-3">MechBot Assistant</h3>
+    <div id="chatbox"></div>
+    <form id="chatForm" class="mt-3 d-flex gap-2">
+      <input id="msg" class="form-control" placeholder="Ask about your car..." required>
+      <button class="btn btn-danger"><i class="fas fa-paper-plane"></i></button>
+    </form>`;
+  const box = document.getElementById("chatbox");
+  function addMsg(role, text) { box.insertAdjacentHTML("beforeend", `<div class="msg ${role}">${escapeHtml(text).replace(/\n/g, "<br>")}</div>`); box.scrollTop = box.scrollHeight; }
+  document.getElementById("chatForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const m = document.getElementById("msg").value.trim();
+    if (!m) return;
+    addMsg("user", m);
+    document.getElementById("msg").value = "";
+    try {
+      const r = await WNP.api.chatbot.send(m);
+      const d = r.data;
+      addMsg("bot", d.response || "(no response)");
+    } catch (e) { addMsg("bot", "Error: " + e.message); }
+  });
+})();
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

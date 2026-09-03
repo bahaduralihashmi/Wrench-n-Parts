@@ -1,0 +1,27 @@
+<style>
+.dash-shell { display:flex; min-height:100vh; }
+.dash-sidebar { width:240px; background:#1a1a2e; color:#fff; padding:24px 12px; position:sticky; top:0; height:100vh; }
+.dash-sidebar-brand { display:flex; align-items:center; gap:10px; padding:0 8px 16px; border-bottom:1px solid rgba(255,255,255,.1); }
+.dash-role { font-size:.7rem; letter-spacing:1px; color:#dc3545; font-weight:700; }
+.dash-sidebar-nav { display:flex; flex-direction:column; padding-top:12px; }
+.dash-sidebar-item { display:flex; align-items:center; gap:10px; padding:10px 12px; color:rgba(255,255,255,.85); border-radius:8px; text-decoration:none; margin-bottom:4px; font-size:.9rem; }
+.dash-sidebar-item:hover { background:rgba(255,255,255,.06); color:#fff; }
+.dash-sidebar-item.active { background:#dc3545; color:#fff; }
+.dash-sidebar-item i { width:18px; text-align:center; }
+.dash-sidebar-footer { margin-top:auto; padding-top:16px; }
+.dash-main { flex:1; background:#f5f7fb; }
+.dash-topbar { background:#fff; padding:14px 24px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:12px; }
+.dash-topbar-title { font-weight:700; }
+.dash-content { padding:24px; }
+.card-stat { background:#fff; padding:18px; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,.04); }
+.card-stat h3 { margin:0; font-weight:800; }
+.dash-table { background:#fff; border-radius:12px; overflow:hidden; }
+.dash-table table { width:100%; }
+.dash-table th { background:#f5f7fb; }
+@media (max-width: 900px) {
+  .dash-shell { flex-direction:column; }
+  .dash-sidebar { width:100%; height:auto; position:relative; }
+  .dash-sidebar-nav { flex-direction:row; flex-wrap:wrap; }
+  .dash-sidebar-item { flex:1 1 auto; }
+}
+</style>

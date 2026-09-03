@@ -1,0 +1,8 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#dc3545" stroke-width="4"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#000" stroke-width="2"/>
+  <text x="100" y="70" text-anchor="middle" font-family="Arial Black" font-size="28" font-weight="900" fill="#000">WRENCH</text>
+  <text x="100" y="105" text-anchor="middle" font-family="Arial Black" font-size="36" font-weight="900" fill="#dc3545">N</text>
+  <text x="100" y="140" text-anchor="middle" font-family="Arial Black" font-size="28" font-weight="900" fill="#000">PARTS</text>
+  <text x="100" y="170" text-anchor="middle" font-family="Arial" font-size="10" fill="#666">QUALITY SPARE AND SERVICES</text>
+</svg>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Orders — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("customer", "orders");
+  const user = await WNP.requireRole(["customer"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const r = await WNP.api.orders.list({ limit: 100 });
+    const items = r.data || [];
+    out.innerHTML = `
+      <h3 class="fw-bold mb-3">My Orders</h3>
+      ${items.length ? `<div class="dash-table"><table class="table table-hover mb-0">
+        <thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th></th></tr></thead>
+        <tbody>${items.map(o => `<tr>
+          <td>#${o.order_id}</td><td>${WNP.timeAgo(o.created_at)}</td>
+          <td>${(o.items || []).length}</td>
+          <td>${WNP.money(o.total_amount)}</td>
+          <td><span class="badge bg-info">${o.order_status}</span></td>
+          <td><span class="badge bg-${o.payment_status === 'paid' ? 'success' : 'warning'}">${o.payment_status}</span></td>
+          <td><button class="btn btn-sm btn-outline-danger" onclick="returnReq(${o.order_id})">Return</button></td>
+        </tr>`).join("")}</tbody></table></div>` : `<p class="text-muted">No orders yet.</p>`}`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+async function returnReq(oid) {
+  const reason = prompt("Reason for return:");
+  if (!reason) return;
+  try { await WNP.api.returns.create(oid, reason); WNP.flash("Return request submitted", "success"); }
+  catch (e) { WNP.flash(e.message, "danger"); }
+}
+</script>
+</body>
+</html>

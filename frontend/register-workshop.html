@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Workshop Application — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div id="wnp-header"></div>
+<div class="container py-5" style="max-width:560px">
+  <h2 class="fw-bold mb-1"><i class="fas fa-tools text-danger me-2"></i>Register your workshop</h2>
+  <p class="text-muted mb-4">Submit your workshop details. Admin will approve your application.</p>
+  <div id="alert"></div>
+  <form id="f">
+    <div class="mb-3"><label class="form-label">Your name</label><input class="form-control" name="name" required></div>
+    <div class="mb-3"><label class="form-label">Email</label><input class="form-control" type="email" name="email" required></div>
+    <div class="mb-3"><label class="form-label">Password</label><input class="form-control" type="password" name="password" minlength="6" required></div>
+    <div class="mb-3"><label class="form-label">Phone</label><input class="form-control" name="phone"></div>
+    <div class="mb-3"><label class="form-label">Workshop name</label><input class="form-control" name="workshop_name" required></div>
+    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="3"></textarea></div>
+    <div class="mb-3"><label class="form-label">Location</label><input class="form-control" name="location"></div>
+    <div class="mb-3"><label class="form-label">Contact</label><input class="form-control" name="contact"></div>
+    <div class="mb-3"><label class="form-label">Services (comma separated)</label><input class="form-control" name="services" placeholder="Oil Change, Brake Service"></div>
+    <button class="btn btn-danger w-100">Submit application</button>
+  </form>
+</div>
+<div id="wnp-footer"></div>
+<script src="js/app.js"></script><script src="js/layout.js"></script>
+<script>
+document.getElementById("f").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = Object.fromEntries(fd.entries());
+  try {
+    const r = await WNP.api.auth.registerWorkshop(payload);
+    document.getElementById("alert").innerHTML = `<div class="alert alert-success">${r.data.message || "Application submitted"}</div><a href="login.html">Back to login</a>`;
+    e.target.reset();
+  } catch (err) {
+    document.getElementById("alert").innerHTML = `<div class="alert alert-danger">${err.message || "Failed"}</div>`;
+  }
+});
+</script>
+</body>
+</html>

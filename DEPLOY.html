@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrench n Parts — Deployment Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #dc3545;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --card-bg: #0f3460;
+            --text: #e8e8e8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--primary), #a71d2a);
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+        .hero p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .step-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; height: 50px;
+            background: var(--primary);
+            border-radius: 50%;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        .step-card p { font-size: 1rem; margin-bottom: 12px; }
+        .step-card ul { padding-left: 20px; margin-bottom: 15px; }
+        .step-card li { margin-bottom: 8px; font-size: 0.95rem; }
+        .highlight-box {
+            background: rgba(220, 53, 69, 0.15);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        .highlight-box i { color: var(--primary); margin-right: 8px; }
+        .code-box {
+            background: #1e1e2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 12px 0;
+            color: #a9dc76;
+        }
+        .warning-box {
+            background: rgba(255, 193, 7, 0.15);
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        .success-box {
+            background: rgba(40, 167, 69, 0.15);
+            border-left: 4px solid #28a745;
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        .success-box i { color: #28a745; margin-right: 8px; }
+        .warning-box i { color: #ffc107; margin-right: 8px; }
+        .link-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        .link-btn:hover { transform: translateY(-2px); color: #fff; }
+        .link-btn.secondary { background: rgba(255,255,255,0.15); }
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .cost-table th, .cost-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .cost-table th { color: #fff; font-weight: 600; }
+        .cost-table td { color: rgba(255,255,255,0.8); }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+        .checklist li::before { content: "☐ "; color: var(--primary); font-weight: bold; }
+        .checklist li.done::before { content: "✅ "; }
+        .file-tree {
+            background: #1e1e2e;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 12px 0;
+            color: rgba(255,255,255,0.7);
+        }
+        .file-tree .folder { color: #ffd93d; }
+        .file-tree .file { color: #a9dc76; }
+        .step-image-placeholder {
+            background: rgba(255,255,255,0.03);
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 15px 0;
+            color: rgba(255,255,255,0.4);
+        }
+        .badge-step {
+            display: inline-block;
+            background: var(--primary);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .step-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <h1><i class="fas fa-rocket"></i> Wrench n Parts</h1>
+    <p>Deployment Guide — Website Ko Live Kaise Karein</p>
+    <p style="font-size:0.9rem;opacity:0.7;margin-top:5px;">Follow karo aur 30 minute me website live!</p>
+</div>
+
+<div class="container">
+
+    <!-- OVERVIEW -->
+    <div class="step-card">
+        <div class="step-title"><i class="fas fa-list-check"></i> Deployment Overview</div>
+        <p>Aapko ye <strong>5 steps</strong> complete karne hain:</p>
+        <ol style="padding-left:20px;">
+            <li style="margin-bottom:8px;"><strong>Domain + Hosting</strong> kharido (~Rs. 200/month)</li>
+            <li style="margin-bottom:8px;"><strong>Database export</strong> karo localhost se</li>
+            <li style="margin-bottom:8px;"><strong>Database banao</strong> hosting pe</li>
+            <li style="margin-bottom:8px;"><strong>Files upload</strong> karo hosting pe</li>
+            <li style="margin-bottom:8px;"><strong>Import + Config</strong> karo — LIVE!</li>
+        </ol>
+        <div class="highlight-box">
+            <i class="fas fa-clock"></i> <strong>Time:</strong> 20-30 minutes | <strong>Difficulty:</strong> Easy | <strong>Cost:</strong> ~Rs. 200/month
+        </div>
+    </div>
+
+    <!-- STEP 1: HOSTING KHARIDO -->
+    <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-title">Domain + Hosting Kharido</div>
+        <p>Ye sabse pehla step hai. Aapko ek <strong>domain name</strong> (jaise wrenchnparts.com) aur <strong>hosting</strong> (website rakhne ki jagah) chahiye.</p>
+
+        <div class="highlight-box">
+            <i class="fas fa-star"></i> <strong>Recommended:</strong> Hostinger — sasta, easy, PHP 8.2 support
+        </div>
+
+        <p><strong>Kaise kharidein:</strong></p>
+        <ul>
+            <li>Browser me jao → <strong>hostinger.in</strong> kholein</li>
+            <li><strong>"Web Hosting"</strong> pe click karein → <strong>"Single Web Hosting"</strong> chunein (~Rs. 149/month)</li>
+            <li>Period chunein: <strong>12 months</strong> (sabse sasta)</li>
+            <li>Domain name register karein (example: <code>wrenchnparts.com</code>)</li>
+            <li>Account banayein → Payment karein (UPI/Card se)</li>
+            <li>Email aayegi usme <strong>cPanel login details</strong> honge</li>
+        </ul>
+
+        <a href="https://www.hostinger.in/web-hosting" target="_blank" class="link-btn">
+            <i class="fas fa-external-link-alt"></i> Hostinger Pe Jao
+        </a>
+        <a href="https://www.namecheap.com/hosting/shared/" target="_blank" class="link-btn secondary">
+            <i class="fas fa-external-link-alt"></i> Namecheap (Alternative)
+        </a>
+
+        <div class="warning-box" style="margin-top:20px;">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Payment ke baad email check karo — usme cPanel URL, username, password hoga. Ye save karo!
+        </div>
+
+        <div class="code-box">
+<strong>CPanel Login Details (Email se copy karo):</strong>
+URL:      https://yourdomain.com:2083
+Username: (email me mila hoga)
+Password: (setup ke time diya)
+        </div>
+
+        <div class="highlight-box">
+            <i class="fas fa-indian-rupee-sign"></i> <strong>Total Cost:</strong> ~Rs. 2,000-2,500 pehle saal me (domain + hosting)
+        </div>
+    </div>
+
+    <!-- STEP 2: DATABASE EXPORT -->
+    <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-title">Database Export Karo (Localhost Se)</div>
+        <p>Apni localhost (XAMPP) database ka backup banao — hosting pe import karne ke liye.</p>
+
+        <p><span class="badge-step">METHOD 1</span> <strong>phpMyAdmin Se (Easy)</strong></p>
+        <ul>
+            <li>Browser me kholo: <code>http://localhost/phpmyadmin</code></li>
+            <li>Left panel me <strong>wrench_parts_db</strong> click karo</li>
+            <li>Upar <strong>"Export"</strong> tab pe jao</li>
+            <li>Format: <strong>SQL</strong> rakhein</li>
+            <li><strong>"Go"</strong> button dabao</li>
+            <li>File download hogi: <code>wrench_parts_db.sql</code></li>
+        </ul>
+
+        <p style="margin-top:15px;"><span class="badge-step">METHOD 2</span> <strong>PowerShell Se</strong></p>
+        <div class="code-box">
+# PowerShell open karo (Run as Admin) aur ye command chalao:
+
+C:\xampp\mysql\bin\mysqldump.exe -u root wrench_parts_db > "E:\Wrench_n_Parts.sql"
+
+# Export ho gaya! File E drive pe save hogi.
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Export ke baad:</strong> SQL file ko Notepad++ ya VS Code me kholo aur <strong>first 2 lines DELETE karo:</strong>
+        </div>
+        <div class="code-box">
+# Ye 2 lines DELETE karni hain:
+
+CREATE DATABASE IF NOT EXISTS wrench_parts_db;
+USE wrench_parts_db;
+
+# Baaki sab rehne do, sirf ye 2 lines hatao.
+        </div>
+    </div>
+
+    <!-- STEP 3: DATABASE BANAO -->
+    <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-title">Hosting Pe Database Banao</div>
+        <p>Ab hosting ke cPanel me database create karo.</p>
+
+        <p><strong>Step-by-step:</strong></p>
+        <ul>
+            <li>cPanel me login karo (email se URL + credentials)</li>
+            <li><strong>"MySQL Databases"</strong> icon pe click karo</li>
+            <li>Neeche <strong>"Create New Database"</strong> section me naam likho: <code>wrench_parts_db</code> → <strong>"Create Database"</strong> button</li>
+            <li>Ab <strong>"MySQL Users"</strong> section me naya user banao:
+                <ul>
+                    <li>Username: <code>wnp_user</code></li>
+                    <li>Password: <code>Wnp@2024Secure!</code> (ya khud ka strong password)</li>
+                    <li><strong>"Create User"</strong> button</li>
+                </ul>
+            </li>
+            <li>Ab <strong>"Add User to Database"</strong> section:
+                <ul>
+                    <li>User select karo: <code>wnp_user</code></li>
+                    <li>Database select karo: <code>wrench_parts_db</code></li>
+                    <li><strong>"Add"</strong> button dabao</li>
+                </ul>
+            </li>
+            <li>Next page pe <strong>"All Privileges"</strong> checkbox ☑️ karo</li>
+            <li><strong>"Make Changes"</strong> button dabao</li>
+        </ul>
+
+        <div class="success-box">
+            <i class="fas fa-check-circle"></i> <strong>Success!</strong> Ab aapke paas ye details hain (inhe save karo):
+        </div>
+
+        <div class="code-box">
+<strong>Database Details (Save karo — baad me lagenge):</strong>
+
+DB Host:     localhost
+DB Name:     wrench_parts_db
+DB User:     wnp_user (ya jo banaya)
+DB Password: Wnp@2024Secure! (ya jo diya)
+        </div>
+    </div>
+
+    <!-- STEP 4: FILES UPLOAD -->
+    <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-title">Files Upload Karo</div>
+        <p>Ab apni website ki sare files hosting pe upload karo.</p>
+
+        <p><span class="badge-step">METHOD 1</span> <strong>Zip + File Manager (Easy)</strong></p>
+        <p>Pehle localhost se zip banao:</p>
+        <div class="code-box">
+# PowerShell me ye command chalao:
+
+Compress-Archive -Path "E:\wrench and parts\babu design\babu design\Wrench_n_Parts\*" -DestinationPath "E:\Wrench_n_Parts_Live.zip" -Force
+
+# Zip file ban gayi E drive pe!
+        </div>
+
+        <p>Ab hosting pe upload karo:</p>
+        <ul>
+            <li>cPanel → <strong>"File Manager"</strong> kholein</li>
+            <li><strong>public_html/</strong> folder me jayein</li>
+            <li><strong>"Upload"</strong> button click karein</li>
+            <li><strong>"Choose File"</strong> → <code>Wrench_n_Parts_Live.zip</code> select karein</li>
+            <li>Upload hone ka wait karein</li>
+            <li>Upload ho jaye to <strong>"Go Back"</strong> press karein</li>
+            <li>Zip file pe <strong>right click → Extract</strong></li>
+            <li>Extract location: <code>public_html/</code></li>
+        </ul>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Agar files <code>public_html/Wrench_n_Parts/</code> folder me extract hui hain to unhe <strong>public_html/</strong> ke root me move karein!
+        </div>
+
+        <p><span class="badge-step">METHOD 2</span> <strong>FTP Se (FileZilla)</strong></p>
+        <ul>
+            <li>FileZilla download karo: <code>filezilla-project.org</code></li>
+            <li>Connection details cPanel me milegi: <strong>"FTP Accounts"</strong></li>
+            <li>Host: <code>yourdomain.com</code> | User: cPanel user | Password: cPanel pass | Port: <code>21</code></li>
+            <li>Right panel me <code>public_html/</code> kholo</li>
+            <li>Left panel se sare files drag karke drop karo</li>
+        </ul>
+
+        <p style="margin-top:15px;"><strong>Final Folder Structure:</strong></p>
+        <div class="file-tree">
+<span class="folder">public_html/</span>
+├── <span class="folder">admin/</span>
+├── <span class="folder">api/</span>
+├── <span class="folder">chatbot/</span>
+├── <span class="folder">css/</span>
+├── <span class="folder">customer/</span>
+├── <span class="folder">database/</span>
+├── <span class="folder">includes/</span>
+├── <span class="folder">js/</span>
+├── <span class="folder">management/</span>
+├── <span class="folder">shopkeeper/</span>
+├── <span class="folder">uploads/</span>
+├── <span class="folder">workshop/</span>
+├── <span class="file">index.php</span>
+├── <span class="file">login.php</span>
+├── <span class="file">product-detail.php</span>
+├── <span class="file">workshop-finder.php</span>
+├── <span class="file">.htaccess</span>
+└── ... (baaki files)
+        </div>
+    </div>
+
+    <!-- STEP 5: CONFIG + IMPORT -->
+    <div class="step-card">
+        <div class="step-number">5</div>
+        <div class="step-title">Database Import + Config Update</div>
+        <p>Ab do kaam karo — database import karo aur config files update karo.</p>
+
+        <p><span class="badge-step">A</span> <strong>Database Import:</strong></p>
+        <ul>
+            <li>cPanel → <strong>"phpMyAdmin"</strong> kholein</li>
+            <li>Left panel me <strong>wrench_parts_db</strong> select karein</li>
+            <li>Upar <strong>"Import"</strong> tab pe jayein</li>
+            <li><strong>"Choose File"</strong> → <code>Wrench_n_Parts.sql</code> select karein</li>
+            <li>Ne scroll karein → <strong>"Go"</strong> button dabao</li>
+            <li>Success message aayega ✅</li>
+        </ul>
+
+        <p><span class="badge-step">B</span> <strong>Config Files Update:</strong></p>
+        <p>File Manager me jao → <code>includes/config.php</code> edit karo:</p>
+
+        <div class="code-box">
+&lt;?php
+date_default_timezone_set('Asia/Karachi');
+session_start();
+
+// === YE 4 LINES CHANGE KARO ===
+define('DB_HOST', 'localhost');
+define('DB_USER', 'wnp_user');          // cPanel se
+define('DB_PASS', 'Wnp@2024Secure!');   // cPanel se
+define('DB_NAME', 'wrench_parts_db');   // cPanel se
+
+// === YE 1 LINE CHANGE KARO ===
+define('SITE_URL', 'https://yourdomain.com');
+
+define('UPLOAD_DIR', __DIR__ . '/../uploads/');
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+$conn->set_charset("utf8mb4");
+$conn->query("SET time_zone = '+05:00'");
+?&gt;
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i> <strong>ALSO UPDATE:</strong> <code>chatbot/api.php</code> me bhi same DB credentials change karo (lines 5-8)!
+        </div>
+
+        <p><span class="badge-step">C</span> <strong>.htaccess Banao</strong> (public_html me):</p>
+        <div class="code-box">
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Block SQL files
+&lt;FilesMatch "\.(sql|md|log)$"&gt;
+    Require all denied
+&lt;/FilesMatch&gt;
+
+# Block PHP in uploads
+&lt;Directory "uploads"&gt;
+    &lt;Files "*.php"&gt;
+        Require all denied
+    &lt;/Files&gt;
+&lt;/Directory&gt;
+        </div>
+    </div>
+
+    <!-- STEP 6: TEST -->
+    <div class="step-card">
+        <div class="step-number">6</div>
+        <div class="step-title">Test Karo — Website Live Hai! 🎉</div>
+        <p>Ab apni website open karo aur check karo:</p>
+
+        <div class="code-box">
+Browser me jao: https://yourdomain.com
+        </div>
+
+        <ul class="checklist">
+            <li id="c1">Homepage load ho raha hai</li>
+            <li id="c2">Login page kaam kar raha hai</li>
+            <li id="c3">Admin login: admin@wrenchnparts.com / admin123</li>
+            <li id="c4">Customer login: customer@wrenchnparts.com / cust123</li>
+            <li id="c5">Products dikh rahe hain</li>
+            <li id="c6">Chatbot response de raha hai</li>
+            <li id="c7">File upload kaam kar raha hai (profile photo)</li>
+            <li id="c8">HTTPS green lock dikh raha hai address bar me</li>
+        </ul>
+
+        <div class="success-box" style="margin-top:20px;">
+            <i class="fas fa-party-horn"></i> <strong>Congratulations!</strong> Aapki website ab LIVE hai! 🚀
+        </div>
+    </div>
+
+    <!-- SEED USERS -->
+    <div class="step-card">
+        <div class="step-title"><i class="fas fa-users"></i> Test Login Details</div>
+        <p>In accounts se login karke test karo:</p>
+        <table class="cost-table">
+            <thead>
+                <tr><th>Role</th><th>Email</th><th>Password</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Admin</td><td>admin@wrenchnparts.com</td><td>admin123</td></tr>
+                <tr><td>Manager</td><td>manager@wrenchnparts.com</td><td>mgmt123</td></tr>
+                <tr><td>Shopkeeper</td><td>shop@wrenchnparts.com</td><td>shop123</td></tr>
+                <tr><td>Workshop</td><td>workshop@wrenchnparts.com</td><td>work123</td></tr>
+                <tr><td>Customer</td><td>customer@wrenchnparts.com</td><td>cust123</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="step-card">
+        <div class="step-title"><i class="fas fa-wrench"></i> Common Problems & Solutions</div>
+        <table class="cost-table">
+            <thead>
+                <tr><th>Problem</th><th>Solution</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>White/Blank page</td>
+                    <td><code>config.php</code> me DB credentials sahi hain? Check karo</td>
+                </tr>
+                <tr>
+                    <td>"Access denied for user"</td>
+                    <td>Database user ko "All Privileges" do (cPanel → MySQL Users)</td>
+                </tr>
+                <tr>
+                    <td>404 Not Found</td>
+                    <td><code>.htaccess</code> file <code>public_html/</code> me hai? File names sahi hain?</td>
+                </tr>
+                <tr>
+                    <td>Upload fails</td>
+                    <td><code>uploads/</code> folder ka permission 755 karo</td>
+                </tr>
+                <tr>
+                    <td>Chatbot not working</td>
+                    <td>Admin panel → Chatbot Config → Gemini API key dalo</td>
+                </tr>
+                <tr>
+                    <td>"Mixed Content" warning</td>
+                    <td><code>config.php</code> me <code>http://</code> ko <code>https://</code> karo</td>
+                </tr>
+                <tr>
+                    <td>Session/Login not working</td>
+                    <td>Browser me cookies enable karo</td>
+                </tr>
+                <tr>
+                    <td>Images not showing</td>
+                    <td><code>uploads/</code> folder ka permission 755 karo, files wahan hain?</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- QUICK COMMANDS -->
+    <div class="step-card">
+        <div class="step-title"><i class="fas fa-terminal"></i> Quick Commands (PowerShell)</div>
+        <p>Ye commands PowerShell me chalao:</p>
+
+        <div class="code-box">
+<strong># 1. Database Export:</strong>
+C:\xampp\mysql\bin\mysqldump.exe -u root wrench_parts_db > "E:\Wrench_n_Parts.sql"
+
+<strong># 2. Zip Banao (all files):</strong>
+Compress-Archive -Path "E:\wrench and parts\babu design\babu design\Wrench_n_Parts\*" -DestinationPath "E:\Wrench_n_Parts_Live.zip" -Force
+
+<strong># 3. Zip Banao (excluding database folder):</strong>
+$src = "E:\wrench and parts\babu design\babu design\Wrench_n_Parts"
+$dst = "E:\Wrench_n_Parts_Live.zip"
+if (Test-Path $dst) { Remove-Item $dst }
+Compress-Archive -Path "$src\*" -DestinationPath $dst -Force
+        </div>
+    </div>
+
+    <!-- COST SUMMARY -->
+    <div class="step-card">
+        <div class="step-title"><i class="fas fa-indian-rupee-sign"></i> Cost Summary</div>
+        <table class="cost-table">
+            <thead>
+                <tr><th>Item</th><th>Cost</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Domain (.com)</td><td>~Rs. 700/year</td><td>Hostinger pe sasta milta hai</td></tr>
+                <tr><td>Hosting (Single)</td><td>~Rs. 1,800/year</td><td>12 months plan</td></tr>
+                <tr><td><strong>Total Year 1</strong></td><td><strong>~Rs. 2,500</strong></td><td>~Rs. 200/month</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>
+    <p>Wrench n Parts — Deployment Guide | Made with ❤️</p>
+</footer>
+
+<script>
+    // Interactive checklist
+    document.querySelectorAll('.checklist li').forEach(li => {
+        li.addEventListener('click', () => {
+            li.classList.toggle('done');
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Products — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/responsive.css" rel="stylesheet">
+</head>
+<body>
+<div id="wnp-header"></div>
+
+<section class="section-v2 bg-soft py-4">
+  <div class="container">
+    <h2 class="fw-bold">Browse Products</h2>
+    <form id="filterForm" class="row g-2 mt-2">
+      <div class="col-md-4"><input class="form-control" name="q" placeholder="Search..." value=""></div>
+      <div class="col-md-2"><select class="form-select" name="category_id"><option value="">All categories</option></select></div>
+      <div class="col-md-2"><select class="form-select" name="sort"><option value="newest">Newest</option><option value="price_asc">Price ↑</option><option value="price_desc">Price ↓</option><option value="name">Name</option></select></div>
+      <div class="col-md-2"><input type="number" class="form-control" name="min_price" placeholder="Min"></div>
+      <div class="col-md-2"><input type="number" class="form-control" name="max_price" placeholder="Max"></div>
+      <div class="col-12"><button class="btn btn-danger"><i class="fas fa-search me-1"></i>Filter</button> <a href="products.html" class="btn btn-outline-secondary">Reset</a></div>
+    </form>
+  </div>
+</section>
+
+<section class="section-v2 py-4">
+  <div class="container">
+    <div class="row g-4" id="grid"><div class="col-12 text-center text-muted py-5">Loading...</div></div>
+  </div>
+</section>
+
+<div id="wnp-footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script><script src="js/layout.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const filterForm = document.getElementById("filterForm");
+if (params.get("q")) filterForm.q.value = params.get("q");
+if (params.get("category_id")) filterForm.category_id.value = params.get("category_id");
+if (params.get("sort")) filterForm.sort.value = params.get("sort");
+
+(async function () {
+  try {
+    const cats = await WNP.api.categories.list();
+    const sel = filterForm.category_id;
+    cats.data.forEach(c => sel.insertAdjacentHTML("beforeend", `<option value="${c.category_id}">${escapeHtml(c.category_name)}</option>`));
+    if (params.get("category_id")) sel.value = params.get("category_id");
+  } catch (e) {}
+  await load();
+})();
+
+filterForm.addEventListener("submit", (e) => { e.preventDefault(); load(); });
+
+async function load() {
+  const fd = new FormData(filterForm);
+  const q = Object.fromEntries(fd.entries());
+  Object.keys(q).forEach(k => { if (!q[k]) delete q[k]; });
+  try {
+    const r = await WNP.api.products.list(q);
+    const items = r.data || [];
+    document.getElementById("grid").innerHTML = items.length
+      ? items.map(productCard).join("")
+      : `<div class="col-12 text-center text-muted py-5">No products match your filters</div>`;
+  } catch (e) {
+    document.getElementById("grid").innerHTML = `<div class="col-12 text-center text-danger py-5">${e.message || "Failed to load"}</div>`;
+  }
+}
+
+function productCard(p) {
+  const img = p.product_image || "images/no-image.png";
+  const price = p.discount_price
+    ? `<span class="text-decoration-line-through text-muted">${WNP.money(p.price)}</span> <span class="fw-bold text-danger">${WNP.money(p.discount_price)}</span>`
+    : `<span class="fw-bold text-danger">${WNP.money(p.price)}</span>`;
+  return `
+    <div class="col-lg-3 col-md-4 col-6">
+      <div class="card h-100 shadow-sm">
+        <a href="product-detail.html?id=${p.product_id}"><img src="${img}" class="card-img-top" alt="${escapeHtml(p.product_name)}" onerror="this.src='images/no-image.png'" style="height:200px;object-fit:cover"></a>
+        <div class="card-body">
+          <small class="text-muted">${escapeHtml(p.category_name || "")}</small>
+          <h6 class="card-title"><a href="product-detail.html?id=${p.product_id}" class="text-decoration-none text-dark">${escapeHtml(p.product_name)}</a></h6>
+          <div class="small text-muted mb-2">${escapeHtml(p.brand || "")}</div>
+          <div>${price}</div>
+          <button class="btn btn-sm btn-danger w-100 mt-2" onclick="addToCart(${p.product_id})"><i class="fas fa-cart-plus me-1"></i>Add to Cart</button>
+        </div>
+      </div>
+    </div>`;
+}
+async function addToCart(id) {
+  try { await WNP.api.cart.add(id, 1); WNP.flash("Added to cart", "success"); WNP.refreshCartCount(); }
+  catch (e) { if (e.status === 401) location.href = "login.html"; else WNP.flash(e.message || "Failed", "danger"); }
+}
+function escapeHtml(s) { return (s == null ? "" : String(s)).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+</script>
+</body>
+</html>

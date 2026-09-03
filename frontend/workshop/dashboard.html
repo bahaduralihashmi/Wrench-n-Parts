@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Workshop Dashboard — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("workshop", "dashboard");
+  const user = await WNP.requireRole(["workshop"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const [ws, appts] = await Promise.all([WNP.api.workshops.mine().catch(()=>({data:null})), WNP.api.appointments.list()]);
+    const pending = (appts.data || []).filter(a => a.status === "pending").length;
+    out.innerHTML = `
+      <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Pending bookings</small><h3>${pending}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Total appointments</small><h3>${(appts.data||[]).length}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Rating</small><h3>${(ws.data && ws.data.rating) || "0.0"}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Status</small><h3 class="text-capitalize">${(ws.data && ws.data.status) || "—"}</h3></div></div>
+      </div>
+      <div class="dash-table p-3">
+        <h5 class="fw-bold mb-3">Upcoming Appointments</h5>
+        ${(appts.data || []).length ? `<table class="table table-sm"><thead><tr><th>#</th><th>Customer</th><th>Service</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>${appts.data.slice(0,10).map(a => `<tr><td>#${a.appointment_id}</td><td>${escapeHtml(a.customer_name || "")}</td><td>${escapeHtml(a.service_type || "")}</td><td>${escapeHtml(a.appointment_date || "")}</td><td><span class="badge bg-info">${a.status}</span></td></tr>`).join("")}</tbody></table>` : `<p class="text-muted">No appointments</p>`}
+      </div>`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

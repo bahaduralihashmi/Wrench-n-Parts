@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("admin", "dashboard");
+  const user = await WNP.requireRole(["admin", "management"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const r = await WNP.api.admin.dashboard();
+    const d = r.data;
+    out.innerHTML = `
+      <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Users</small><h3>${d.total_users}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Products</small><h3>${d.total_products}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Orders</small><h3>${d.total_orders}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Revenue (paid)</small><h3>${WNP.money(d.revenue)}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Customers</small><h3>${d.total_customers}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Shopkeepers</small><h3>${d.total_shopkeepers}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Workshops</small><h3>${d.total_workshops}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Appointments</small><h3>${d.total_appointments}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Pending shops</small><h3>${d.pending_shops}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Pending workshops</small><h3>${d.pending_workshops}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Pending orders</small><h3>${d.pending_orders}</h3></div></div>
+        <div class="col-md-3"><div class="card-stat"><small class="text-muted">Categories</small><h3>${d.total_categories}</h3></div></div>
+      </div>`;
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+</script>
+</body>
+</html>

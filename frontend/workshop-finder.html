@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Workshop Finder — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div id="wnp-header"></div>
+<section class="section-v2 py-4">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Find a Workshop</h2>
+    <div id="grid" class="row g-3"><div class="col-12 text-center py-5">Loading...</div></div>
+  </div>
+</section>
+<div id="wnp-footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/app.js"></script><script src="js/layout.js"></script>
+<script>
+(async function () {
+  try {
+    const r = await WNP.api.workshops.list();
+    const items = r.data || [];
+    if (!items.length) { document.getElementById("grid").innerHTML = `<div class="col-12 text-center text-muted py-5">No workshops found</div>`; return; }
+    document.getElementById("grid").innerHTML = items.map(w => `
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+              <div class="workshop-icon me-2"><i class="fas fa-tools"></i></div>
+              <h5 class="mb-0">${escapeHtml(w.workshop_name)}</h5>
+            </div>
+            <p class="small text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(w.location || "N/A")}</p>
+            <p class="small text-muted mb-1"><i class="fas fa-phone me-1"></i>${escapeHtml(w.contact || "N/A")}</p>
+            <p class="small mb-2">${escapeHtml(w.description || "").substring(0, 140)}</p>
+            <div class="mb-2"><i class="fas fa-star text-warning"></i> ${w.rating || "0.0"} (${w.total_reviews || 0} reviews)</div>
+            <div class="small mb-3"><strong>Services:</strong> ${escapeHtml(w.services || "N/A")}</div>
+            <button class="btn btn-danger btn-sm" onclick="book(${w.workshop_id}, '${escapeHtml(w.workshop_name)}')">Book Appointment</button>
+          </div>
+        </div>
+      </div>`).join("");
+  } catch (e) {
+    document.getElementById("grid").innerHTML = `<div class="col-12 alert alert-danger">${e.message}</div>`;
+  }
+})();
+async function book(wid, name) {
+  const date = prompt(`Book appointment at ${name}\n\nEnter date (YYYY-MM-DD):`);
+  if (!date) return;
+  const time = prompt("Enter time (HH:MM:SS):", "10:00:00");
+  if (!time) return;
+  const service = prompt("Service type:", "General Service");
+  if (!service) return;
+  try {
+    await WNP.api.appointments.create({ workshop_id: wid, appointment_date: date, appointment_time: time, service_type: service });
+    WNP.flash("Appointment booked!", "success");
+  } catch (e) { if (e.status === 401) location.href = "login.html"; else WNP.flash(e.message, "danger"); }
+}
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

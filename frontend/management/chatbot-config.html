@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Chatbot Config — Wrench n Parts</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+<script src="../js/app.js"></script><script src="../js/dashboard.js"></script>
+<script>
+(async function () {
+  document.getElementById("root").innerHTML = WNP.renderDashboard("management", "chatbot-config");
+  const user = await WNP.requireRole(["admin", "management"]);
+  if (!user) return;
+  const out = document.getElementById("dashContent");
+  try {
+    const r = await WNP.api.management.chatbotConfig();
+    const d = r.data;
+    out.innerHTML = `<h3 class="fw-bold mb-3">Chatbot configuration</h3>
+      <form id="f" class="card card-body shadow-sm" style="max-width:520px">
+        <div class="mb-3"><label class="form-label">Enabled</label>
+          <select class="form-select" name="chatbot_enabled">
+            <option value="1" ${d.chatbot_enabled==='1'?'selected':''}>Enabled</option>
+            <option value="0" ${d.chatbot_enabled==='0'?'selected':''}>Disabled</option>
+          </select>
+        </div>
+        <div class="mb-3"><label class="form-label">Chatbot name</label><input class="form-control" name="chatbot_name" value="${escapeHtml(d.chatbot_name)}"></div>
+        <div class="mb-3"><label class="form-label">Gemini model</label><input class="form-control" name="gemini_model" value="${escapeHtml(d.gemini_model)}"></div>
+        <div class="mb-3"><label class="form-label">Gemini API key ${d.has_api_key?'<span class="badge bg-success">set</span>':'<span class="badge bg-warning">missing</span>'}</label>
+          <input class="form-control" name="gemini_api_key" placeholder="paste key to update"></div>
+        <button class="btn btn-danger">Save</button>
+      </form>`;
+    document.getElementById("f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const payload = Object.fromEntries(fd.entries());
+      if (!payload.gemini_api_key) delete payload.gemini_api_key;
+      try { await WNP.api.management.updateChatbotConfig(payload); WNP.flash("Saved","success"); location.reload(); }
+      catch (err) { WNP.flash(err.message,"danger"); }
+    });
+  } catch (e) { out.innerHTML = `<div class="alert alert-danger">${e.message}</div>`; }
+})();
+function escapeHtml(s){return(s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script>
+</body>
+</html>

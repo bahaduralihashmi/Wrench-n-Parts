@@ -1,0 +1,891 @@
+/* ============================================================
+   GLOBAL RESPONSIVE - Wrench n Parts
+   Additive-only: desktop appearance is untouched.
+   Handles mobile, tablet and every screen width uniformly.
+   ============================================================ */
+
+/* ---------------- Base safety net ---------------- */
+html { -webkit-text-size-adjust: 100%; }
+body { overflow-x: hidden; width: 100%; }
+
+img, video, iframe, embed, canvas, svg { max-width: 100%; }
+table { border-collapse: collapse; }
+
+h1, h2, h3, h4, h5, h6, p, a, span, div, td, th, li {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+input, select, textarea, button { font-size: 16px; }
+
+/* Wide content should never force horizontal scroll */
+.wnp-header, .dash-layout, .admin-layout, .cust-navbar,
+.premium-footer, .hero-v2, .section-v2, .pd-wrapper, .bp-wrapper,
+.ck-page, .chat-page, .support-hero, .careers-hero, .about-hero, .privacy-hero {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+/* Footer after dash-layout needs sidebar offset */
+.dash-layout ~ .premium-footer {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 1400px  (large desktop -> compact laptop)
+   ============================================================ */
+@media (max-width: 1400px) {
+    .pf-container { gap: 36px; }
+    .dash-main { padding: 24px 28px; }
+    .admin-main { padding: 24px 28px; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 1200px  (laptop)
+   ============================================================ */
+@media (max-width: 1200px) {
+    .hero-v2 .hero-title-v2 { font-size: 2.7rem; }
+    .pd-layout { gap: 30px; }
+    .cust-products-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 1024px  (tablet landscape / small laptop)
+   ============================================================ */
+@media (max-width: 1024px) {
+    .hero-v2 .hero-title-v2 { font-size: 2.4rem; }
+    .hero-image-wrap::before { width: 260px; height: 260px; }
+    .hero-image-wrap .hero-main-img { max-width: 420px; }
+
+    .cust-products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+    .pd-layout { grid-template-columns: 1fr; gap: 28px; }
+    .pd-image-wrap img { max-height: 380px; }
+
+    .dash-stats, .admin-stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .dash-card-body { padding: 20px; }
+
+    .ck-grid { grid-template-columns: 1fr; gap: 22px; }
+    .ck-summary { position: static; }
+
+    .chat-container { max-width: 100%; }
+    .chat-body { padding: 16px; }
+
+    .pf-container { padding: 46px 26px 22px; }
+
+    .cust-welcome-banner { padding: 30px 26px; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 992px  (tablet portrait)
+   ============================================================ */
+@media (max-width: 992px) {
+    .hero-v2 { padding: 42px 0 54px; }
+    .hero-v2 .hero-title-v2 { font-size: 2.1rem; }
+    .hero-desc-v2 { font-size: 0.95rem; }
+    .hero-stats { gap: 24px; }
+    .hero-image-wrap::before { width: 220px; height: 220px; }
+
+    .section-v2 { padding: 36px 0; }
+    .section-v2 .section-heading { font-size: 1.7rem; }
+
+    .dash-layout { display: block; position: relative; }
+
+    .admin-sidebar { transform: translateX(-100%); }
+    .admin-sidebar.show { transform: translateX(0); }
+    .admin-main { margin-left: 0; max-width: 100%; padding: 22px 20px 50px; }
+    .admin-layout ~ .premium-footer { margin-left: 0; width: 100%; }
+    .dash-layout ~ .premium-footer { margin-left: 0 !important; width: 100% !important; }
+
+    .dash-layout .dash-sidebar { transform: translateX(-100%); position: fixed; top: 0; left: 0; z-index: 100; height: 100vh; width: 260px; }
+    .dash-layout .dash-sidebar.show { transform: translateX(0); }
+    .dash-layout .dash-main { margin-left: 0 !important; padding: 20px 14px 50px !important; width: 100% !important; max-width: 100% !important; }
+
+    .cust-nav-icon-link span { display: none; }
+    .cust-nav-icon-link { padding: 4px 8px; }
+    .cust-navbar .container-fluid { gap: 6px; }
+
+    .pf-container { grid-template-columns: 1fr 1fr; gap: 34px; }
+    .pf-right { grid-column: 1 / -1; }
+
+    .support-cats-grid, .careers-benefits-grid, .careers-intern-grid,
+    .privacy-info-grid, .privacy-contact-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .wnp-mobile-toggle { display: flex; }
+    .wnp-mobile-menu { display: block; }
+    .wnp-header-inner { height: 56px; }
+
+    .sk-chat-layout { flex-direction: column; }
+    .sk-chat-list { width: 100%; max-height: 260px; }
+
+    #chatbot-window { width: 400px; height: 500px; right: 16px; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 768px  (small tablet / large phone)
+   ============================================================ */
+@media (max-width: 768px) {
+    .hero-v2 { padding: 34px 0 44px; }
+    .hero-v2 .hero-title-v2 { font-size: 1.9rem; }
+    .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+    .hero-actions .btn-modern, .hero-actions .btn { width: 100%; justify-content: center; text-align: center; }
+    .hero-stats { flex-wrap: nowrap; gap: 12px; }
+    .hero-stat-item { flex: 1 1 0; min-width: 0; }
+    .hero-image-wrap { margin-top: 22px; }
+    .hero-image-wrap::before { width: 180px; height: 180px; }
+    .hero-float-badge { padding: 6px 10px; font-size: 0.68rem; }
+
+    .section-v2 .section-heading { font-size: 1.5rem; }
+    .section-v2 .section-subheading { font-size: 0.9rem; }
+
+    .dash-main { padding: 16px 14px; }
+    .dash-header { flex-direction: column; gap: 14px; }
+    .dash-header-actions { width: 100%; }
+    .dash-card-body { padding: 16px; }
+    .dash-stats { grid-template-columns: 1fr; }
+    .dash-quick-actions { grid-template-columns: 1fr 1fr; }
+
+    .admin-main { padding: 18px 14px 44px; }
+    .admin-stat-grid { grid-template-columns: 1fr 1fr; }
+    .admin-header { flex-direction: column; gap: 12px; align-items: stretch; }
+    .admin-header-actions { width: 100%; }
+    .admin-header-actions .btn { width: 100%; justify-content: center; }
+    .admin-table-responsive, .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-responsive table.table-modern,
+    .table-responsive table.admin-table { min-width: 600px; }
+
+    .cust-navbar .container-fluid { flex-wrap: wrap; height: auto; padding: 10px 12px; gap: 8px; }
+    .cust-nav-right { display: none; }
+    .cust-mobile-nav { display: flex; }
+    .cust-body { padding-bottom: 70px; }
+    .cust-welcome-banner { flex-direction: column; text-align: center; padding: 22px 18px; margin: 14px 10px; }
+    .cust-welcome-actions { flex-direction: column; width: 100%; }
+    .cust-btn-workshop, .cust-btn-chatbot { justify-content: center; }
+    .cust-products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .cust-section { padding: 0 10px; }
+
+    .pd-wrapper { padding: 20px 14px 44px; }
+    .pd-name { font-size: 1.35rem; }
+    .pd-price { font-size: 1.5rem; }
+    .pd-meta { grid-template-columns: 1fr; }
+    .pd-actions { flex-direction: column; }
+    .pd-actions .pd-btn { width: 100%; justify-content: center; }
+    .pd-related-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+    .bp-wrapper { padding: 24px 14px 48px; }
+    .bp-products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .bp-select-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+    .ck-page { padding: 20px 0 44px; }
+    .ck-form-section { padding: 22px 18px; }
+    .ck-payment-grid { grid-template-columns: 1fr; }
+    .ck-submit { padding: 14px; }
+
+    .pf-container { grid-template-columns: 1fr; gap: 30px; padding: 36px 18px 18px; }
+    .pf-middle { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .pf-contact-card { max-width: 100%; }
+    .pf-bottom { padding: 0 18px 16px; }
+    .pf-links a { font-size: 0.78rem; }
+    .pf-col-title { font-size: 0.88rem; margin-bottom: 14px; }
+    .pf-logo-link { font-size: 1.4rem; gap: 5px; }
+    .pf-logo-img { height: 36px; width: 36px; }
+    .pf-social-btn { width: 34px; height: 34px; font-size: 0.75rem; }
+    .pf-contact-card { padding: 22px 18px; }
+    .pf-contact-item span { font-size: 0.75rem; }
+
+    .support-cats-grid, .careers-benefits-grid, .careers-intern-grid,
+    .privacy-info-grid, .privacy-contact-grid { grid-template-columns: 1fr; gap: 14px; }
+    .support-hero, .careers-hero, .about-hero, .privacy-hero { padding: 44px 0; }
+    .support-hero h1, .careers-hero h1, .about-hero h1, .privacy-hero h1 { font-size: 1.8rem; }
+
+    .chat-page { height: calc(100vh - 130px); max-height: calc(100vh - 130px); }
+    .chat-msg { max-width: 85%; }
+
+    .sk-chat-layout { gap: 10px; }
+    .sk-chat-main { min-height: 420px; }
+    .sk-chat-msg { max-width: 85%; }
+
+    .return-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .return-form-grid { grid-template-columns: 1fr; }
+    .return-hero { padding: 28px 20px; }
+
+    #chatbot-window { width: calc(100% - 20px); right: 10px; bottom: 90px; height: 470px; border-radius: 16px; }
+    #chatbot-toggle { width: 56px; height: 56px; right: 14px; bottom: 14px; }
+
+    .wnp-logo-video { width: 90vmin !important; height: 90vmin !important; max-height: 90vmin !important; max-width: 90vmin !important; }
+
+    .login-container { margin: 24px auto 48px; padding: 0 16px; }
+    .login-title { font-size: 1.6rem; }
+    .login-header .container { padding: 0 16px; }
+
+    .modal-content { margin: 10px; }
+    .pagination { flex-wrap: wrap; gap: 4px; }
+
+    .page-enter .row > [class*="col-"] { margin-bottom: 18px; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 640px  (compact phone / phablet)
+   ============================================================ */
+@media (max-width: 640px) {
+    .hero-v2 .hero-title-v2 { font-size: 1.7rem; }
+    .hero-stats { flex-direction: row !important; gap: 8px !important; flex-wrap: nowrap !important; }
+    .hero-stat-item { flex: 1 1 0; min-width: 0; }
+    .hero-stat-item h3 { font-size: 1.4rem; }
+    .hero-stat-item p { font-size: 0.7rem; }
+
+    .dash-quick-actions { grid-template-columns: 1fr; }
+    .admin-quick-actions { grid-template-columns: 1fr 1fr; }
+
+    .pf-middle { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pf-logo-link { font-size: 1.3rem; }
+    .pf-logo-img { height: 32px; width: 32px; }
+    .pf-col-title { font-size: 0.82rem; margin-bottom: 12px; }
+    .pf-links li { margin-bottom: 8px; }
+    .pf-links a { font-size: 0.75rem; }
+    .pf-social-row { gap: 8px; }
+    .pf-social-btn { width: 32px; height: 32px; font-size: 0.72rem; }
+    .pf-contact-card { padding: 18px 16px; border-radius: 12px; }
+    .pf-contact-item { gap: 10px; margin-bottom: 12px; }
+    .pf-contact-icon { width: 28px; height: 28px; font-size: 0.65rem; }
+    .pf-contact-item span { font-size: 0.72rem; }
+    .pf-bottom p { font-size: 0.72rem; }
+
+    .pd-related-grid { grid-template-columns: 1fr 1fr; }
+    .cust-products-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .ck-header { flex-direction: column; align-items: flex-start; }
+    .ck-header-left { width: 100%; }
+
+    .form-row, .row.g-3 > [class*="col-"], .row.g-4 > [class*="col-"] { padding-left: 6px; padding-right: 6px; }
+    .container, .container-fluid { padding-left: 14px; padding-right: 14px; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 576px  (phone)
+   ============================================================ */
+@media (max-width: 576px) {
+    .hero-v2 .hero-title-v2 { font-size: 1.55rem; }
+    .hero-v2 .hero-label-badge { font-size: 0.7rem; padding: 5px 12px; }
+    .hero-desc-v2 { font-size: 0.88rem; }
+
+    .section-v2 .section-heading { font-size: 1.35rem; }
+    .section-v2 { padding: 30px 0; }
+
+    .wnp-logo-img { max-height: 40px !important; max-width: 130px !important; }
+    .wnp-icon-btn { width: 34px; height: 34px; }
+    .wnp-user-text { display: none; }
+
+    .admin-stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .admin-stat-card { padding: 14px; }
+    .admin-stat-card .stat-number { font-size: 1.2rem; }
+    .admin-stat-card .stat-label { font-size: 0.7rem; }
+    .admin-page-title { font-size: 1.2rem; }
+    .admin-card-body { padding: 14px; }
+    .admin-card-header { padding: 14px; flex-wrap: wrap; }
+    .admin-table thead th, .admin-table tbody td { padding: 10px 12px; font-size: 0.78rem; }
+    .btn-admin-red { padding: 9px 14px; font-size: 0.78rem; }
+
+    .cust-welcome-title { font-size: 1.2rem; }
+    .cust-brand-tag { display: none; }
+    .cust-product-img { height: 120px; }
+    .cust-product-name { font-size: 0.78rem; }
+
+    .pd-wrapper { padding: 16px 10px 36px; }
+    .pd-name { font-size: 1.2rem; }
+    .pd-price-row { flex-wrap: wrap; }
+    .pd-btn { padding: 11px 18px; font-size: 0.88rem; }
+
+    .bp-select-grid { grid-template-columns: 1fr 1fr; }
+
+    .table-modern thead th { font-size: 0.72rem; }
+    .table-modern tbody td { font-size: 0.82rem; }
+
+    .return-hero h1 { font-size: 1.4rem; }
+    .return-stats { grid-template-columns: 1fr 1fr; }
+    .return-card { flex-direction: column; align-items: stretch; }
+
+    .chat-date-divider { font-size: 0.66rem; }
+
+    .auth-card { padding: 26px 18px; }
+    .register-ws-card, .auth-card { width: 100%; }
+
+    .careers-apply { padding: 24px 16px; }
+    .careers-hero, .about-hero, .support-hero, .privacy-hero { padding: 36px 0; }
+    .careers-hero h1, .about-hero h1, .support-hero h1, .privacy-hero h1 { font-size: 1.5rem; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 480px  (small phone)
+   ============================================================ */
+@media (max-width: 480px) {
+    .hero-v2 .hero-title-v2 { font-size: 1.4rem; }
+    .hero-image-wrap::before { display: none; }
+
+    .admin-stat-grid { grid-template-columns: 1fr; }
+    .admin-header-actions { width: 100%; }
+    .admin-quick-actions { grid-template-columns: 1fr 1fr; }
+    .admin-main { padding: 14px 12px 38px; }
+
+    .dash-main { padding: 14px 10px; }
+    .dash-stat-card { padding: 16px; }
+    .dash-nav-link { padding: 10px 12px; font-size: 0.84rem; }
+
+    .cust-products-grid { grid-template-columns: 1fr; }
+    .cust-product-img { height: 140px; }
+    .cust-welcome-title { font-size: 1.1rem; }
+    .cust-nav-icon-btn { width: 34px; height: 34px; }
+    .cust-brand-logo { max-width: 120px !important; }
+
+    .pd-related-grid { grid-template-columns: 1fr; }
+    .bp-products-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .pf-middle { grid-template-columns: 1fr; gap: 22px; }
+    .pf-container { padding: 30px 14px 14px; gap: 26px; }
+    .pf-contact-card { padding: 16px; }
+
+    .return-stats { grid-template-columns: 1fr; }
+
+    .sk-chat-input { padding: 12px; }
+    .sk-chat-msg { max-width: 92%; }
+
+    .chat-input-bar { padding: 10px 12px; }
+    .chat-msg { max-width: 92%; padding: 10px 12px; }
+
+    .wnp-login-group { display: none; }
+    .wnp-header-right { gap: 4px; }
+
+    .support-contact-grid, .privacy-contact-grid { grid-template-columns: 1fr; }
+    .support-cats-grid, .careers-benefits-grid, .careers-intern-grid { grid-template-columns: 1fr; }
+    .careers-job-card { padding: 18px; }
+    .careers-benefit-card { padding: 20px 16px; }
+
+    .login-badge { margin-bottom: 10px; }
+    .login-title { font-size: 1.4rem; }
+    .login-form-group input { padding: 11px 14px; }
+
+    .page-enter .row > [class*="col-"] { margin-bottom: 14px; }
+
+    .page-enter[style*="padding-left"] { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 400px  (very small phone)
+   ============================================================ */
+@media (max-width: 400px) {
+    .hero-v2 .hero-title-v2 { font-size: 1.3rem; }
+    .hero-v2 .hero-label-badge { white-space: normal; }
+    .hero-stats { gap: 6px; }
+    .hero-stat-item h3 { font-size: 1.2rem; }
+    .hero-stat-item p { font-size: 0.65rem; }
+
+    .cust-navbar .container-fluid { padding: 8px 10px; }
+    .cust-mobile-link span { font-size: 0.66rem; }
+    .cust-mobile-link i { font-size: 1rem; }
+
+    .pd-price { font-size: 1.3rem; }
+    .pd-name { font-size: 1.1rem; }
+
+    .bp-select-grid { grid-template-columns: 1fr; }
+
+    .admin-page-title { font-size: 1.1rem; }
+    .admin-card-header h5 { font-size: 0.85rem; }
+    .admin-stat-card .stat-number { font-size: 1.3rem; }
+
+    .dash-header h2 { font-size: 1.15rem; }
+    .dash-badge { font-size: 0.68rem; }
+
+    .chat-nav-brand h1 { font-size: 1rem; }
+    .chat-nav-icon { width: 32px; height: 32px; }
+    .chat-quick-grid { grid-template-columns: 1fr; }
+    .chat-emergency-strip { padding: 8px 10px; }
+
+    .return-hero h1 { font-size: 1.25rem; }
+    .return-submit-btn { width: 100%; justify-content: center; }
+
+    .btn-modern, .btn, .btn-outline-modern { padding-left: 14px; padding-right: 14px; }
+
+    .pf-middle { grid-template-columns: 1fr; gap: 16px; }
+    .pf-logo-link { font-size: 1.2rem; }
+    .pf-logo-img { height: 30px; width: 30px; }
+    .pf-tagline { font-size: 0.78rem; }
+    .pf-sub-tagline { font-size: 0.72rem; margin-bottom: 16px; }
+    .pf-col-title { font-size: 0.78rem; margin-bottom: 10px; letter-spacing: 1.5px; }
+    .pf-links a { font-size: 0.72rem; }
+    .pf-links a:hover { padding-left: 12px; }
+    .pf-contact-card { padding: 16px 14px; border-radius: 10px; }
+    .pf-card-title { font-size: 0.85rem; letter-spacing: 1.5px; }
+    .pf-contact-item { gap: 8px; margin-bottom: 10px; }
+    .pf-contact-icon { width: 26px; height: 26px; font-size: 0.62rem; }
+    .pf-contact-item span { font-size: 0.7rem; }
+    .pf-social-row { gap: 6px; }
+    .pf-social-btn { width: 30px; height: 30px; font-size: 0.68rem; }
+    .pf-bottom { padding: 0 14px 14px; }
+    .pf-bottom p { font-size: 0.68rem; }
+    .pf-container { padding: 28px 14px 14px; gap: 24px; }
+}
+
+/* ============================================================
+   BREAKPOINT: ≤ 360px  (tiny screens)
+   ============================================================ */
+@media (max-width: 360px) {
+    .hero-v2 .hero-title-v2 { font-size: 1.2rem; }
+    .hero-v2 { padding: 28px 0 36px; }
+    .hero-stats { gap: 4px; }
+    .hero-stat-item h3 { font-size: 1.1rem; }
+    .hero-stat-item p { font-size: 0.6rem; }
+
+    .cust-products-grid, .bp-products-grid, .pd-related-grid { grid-template-columns: 1fr; }
+
+    .wnp-logo-text { font-size: 0.95rem; }
+    .wnp-logo-img { max-width: 110px !important; }
+
+    .admin-stat-grid { grid-template-columns: 1fr; gap: 8px; }
+    .admin-stat-card { padding: 14px 10px; }
+
+    .container, .container-fluid { padding-left: 10px; padding-right: 10px; }
+    .pf-container { padding: 22px 10px 10px; gap: 20px; }
+    .pf-logo-link { font-size: 1.1rem; }
+    .pf-logo-img { height: 28px; width: 28px; }
+    .pf-tagline { font-size: 0.72rem; }
+    .pf-sub-tagline { font-size: 0.68rem; margin-bottom: 14px; }
+    .pf-col-title { font-size: 0.72rem; margin-bottom: 8px; }
+    .pf-links a { font-size: 0.68rem; }
+    .pf-links li { margin-bottom: 6px; }
+    .pf-contact-card { padding: 14px 12px; }
+    .pf-card-title { font-size: 0.78rem; }
+    .pf-contact-item span { font-size: 0.66rem; }
+    .pf-bottom p { font-size: 0.65rem; }
+
+    #chatbot-window { height: 440px; }
+    #chatbot-toggle { width: 50px; height: 50px; right: 10px; bottom: 10px; }
+
+    .wnp-logo-video { width: 85vmin !important; height: 85vmin !important; max-height: 85vmin !important; max-width: 85vmin !important; }
+}
+
+/* ============================================================
+   GLOBAL MOBILE DASHBOARD - All Tables → Card Layout
+   ============================================================ */
+@media (max-width: 768px) {
+    /* ---- Generic Table → Card ---- */
+    .admin-table thead,
+    .dash-table thead,
+    .table-modern thead,
+    table.table thead { display: none !important; }
+
+    .admin-table,
+    .dash-table,
+    .table-modern,
+    table.table {
+        width: 100% !important;
+    }
+    .admin-table tbody,
+    .dash-table tbody,
+    .table-modern tbody,
+    table.table tbody { display: block; width: 100%; }
+
+    .admin-table tbody tr,
+    .dash-table tbody tr,
+    .table-modern tbody tr,
+    table.table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 14px 16px;
+        margin: 8px 12px;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        gap: 4px;
+    }
+    [data-theme="dark"] .admin-table tbody tr,
+    [data-theme="dark"] .dash-table tbody tr,
+    [data-theme="dark"] .table-modern tbody tr {
+        background: #1a1a2e;
+        border-color: #2a2a4a;
+    }
+
+    .admin-table tbody td,
+    .dash-table tbody td,
+    .table-modern tbody td,
+    table.table tbody td {
+        border: none !important;
+        padding: 4px 0 !important;
+        font-size: 13px !important;
+        color: #333;
+        background: transparent !important;
+    }
+    [data-theme="dark"] .admin-table tbody td,
+    [data-theme="dark"] .dash-table tbody td {
+        color: #e0e0e0;
+    }
+
+    /* First column = main info (name, order id) */
+    .admin-table tbody td:first-child,
+    .dash-table tbody td:first-child,
+    .table-modern tbody td:first-child,
+    table.table tbody td:first-child {
+        flex: 1 1 100%;
+        font-weight: 600;
+        color: #1a1a2e;
+        font-size: 14px !important;
+    }
+    [data-theme="dark"] .admin-table tbody td:first-child {
+        color: #fff;
+    }
+
+    /* Middle columns = inline badges */
+    .admin-table tbody td:not(:first-child):not(:last-child),
+    .dash-table tbody td:not(:first-child):not(:last-child),
+    .table-modern tbody td:not(:first-child):not(:last-child) {
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    /* Last column = date/action, right aligned */
+    .admin-table tbody td:last-child,
+    .dash-table tbody td:last-child,
+    .table-modern tbody td:last-child,
+    table.table tbody td:last-child {
+        text-align: right;
+        margin-left: auto;
+        color: #999;
+        font-size: 12px !important;
+    }
+
+    /* Badges compact */
+    .role-badge, .status-badge, .order-status-badge,
+    .badge, .order-status-badge { font-size: 10px !important; padding: 3px 8px !important; }
+
+    /* ---- Admin Orders Page - Better Card Layout ---- */
+    .admin-table .cell-info-sub { display: none !important; }
+    .admin-table tbody td:nth-child(4),
+    .admin-table tbody td:nth-child(5) {
+        display: inline-block !important;
+        margin-right: 4px !important;
+    }
+    .admin-table tbody td:nth-child(6) { display: none !important; }
+    .admin-table tbody td:last-child {
+        flex: 1 1 100% !important;
+        text-align: left !important;
+        margin-top: 6px !important;
+        padding-top: 8px !important;
+        border-top: 1px solid #f0f0f0 !important;
+    }
+    .action-btns { justify-content: flex-start !important; gap: 8px !important; }
+    .action-btn { width: 36px !important; height: 36px !important; }
+    .status-pill { font-size: 10px !important; padding: 3px 8px !important; border-radius: 6px !important; }
+
+    /* ---- Section Cards ---- */
+    .section-card { margin: 8px 12px 16px; }
+    .section-header { padding: 14px 16px; }
+    .section-header h3 { font-size: 15px; }
+
+    /* ---- Admin/Management Stats Grid ---- */
+    .admin-stat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .admin-stat-card { padding: 14px !important; }
+    .admin-stat-card .stat-number { font-size: 1.2rem !important; }
+    .admin-stat-card .stat-label { font-size: 0.7rem !important; }
+
+    /* ---- Admin/Management Header ---- */
+    .admin-header { flex-direction: column !important; gap: 12px !important; align-items: stretch !important; }
+    .admin-header-actions { width: 100% !important; }
+    .admin-header-actions .btn,
+    .admin-header-actions button { width: 100% !important; justify-content: center !important; }
+    .admin-page-title { font-size: 1.2rem !important; }
+
+    /* ---- Quick Actions Grid ---- */
+    .admin-quick-actions { grid-template-columns: 1fr 1fr !important; }
+    .dash-quick-actions { grid-template-columns: 1fr 1fr !important; }
+
+    /* ---- Filter Bar ---- */
+    .admin-filter-bar { padding: 12px !important; }
+    .filter-row { gap: 8px !important; }
+    .filter-row input,
+    .filter-row select,
+    .filter-row .btn-filter,
+    .filter-row .btn-reset { width: 100% !important; min-width: 0 !important; font-size: 0.85rem !important; }
+    .admin-card { margin: 0 12px 16px !important; border-radius: 12px !important; }
+    .admin-card-body { padding: 0 !important; }
+
+    /* ---- Filter Rows ---- */
+    .filter-row { flex-direction: column !important; gap: 8px !important; }
+    .filter-row input, .filter-row select,
+    .filter-row .btn-filter, .filter-row .btn-reset { width: 100% !important; }
+
+    /* ---- Pagination ---- */
+    .pagination { flex-wrap: wrap; gap: 4px; justify-content: center; }
+    .pagination .page-link { padding: 6px 10px; font-size: 0.8rem; }
+
+    /* ---- Modals ---- */
+    .modal-content { margin: 10px; border-radius: 14px; }
+    .modal-header { padding: 14px 16px; }
+    .modal-body { padding: 14px; }
+    .modal-body .detail-grid { grid-template-columns: 1fr !important; }
+
+    /* ---- Tables horizontal scroll fallback ---- */
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; }
+
+    /* ---- Overlay for all sidebars ---- */
+    .admin-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; display: none; backdrop-filter: blur(2px); }
+    .admin-sidebar-overlay.active { display: block; }
+}
+
+@media (max-width: 576px) {
+    .admin-stat-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+    .admin-stat-card .stat-number { font-size: 1.1rem !important; }
+    .admin-stat-card .stat-label { font-size: 0.65rem !important; }
+    .admin-quick-actions { grid-template-columns: 1fr !important; }
+    .dash-quick-actions { grid-template-columns: 1fr !important; }
+    .admin-table tbody td,
+    .dash-table tbody td { font-size: 12px !important; }
+}
+
+@media (max-width: 400px) {
+    .admin-stat-grid { grid-template-columns: 1fr !important; }
+    .admin-table tbody td:last-child,
+    .dash-table tbody td:last-child { display: none !important; }
+}
+
+/* ============================================================
+   MANAGEMENT PAGES — Inline grid fixes
+   ============================================================ */
+@media (max-width: 768px) {
+    .mgmt-stats { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .mgmt-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .mgmt-stat { padding: 16px !important; }
+    .mgmt-stat .mgmt-stat-val { font-size: 1.3rem !important; }
+    .mgmt-banner { padding: 24px 18px !important; border-radius: 16px !important; }
+    .mgmt-banner h1 { font-size: 1.3rem !important; }
+    .mgmt-bar-row { gap: 8px !important; }
+    .mgmt-bar-label { width: 70px !important; font-size: .75rem !important; }
+    .mgmt-bar-val { width: 60px !important; font-size: .72rem !important; }
+    .mgmt-summary { grid-template-columns: 1fr !important; }
+    .mgmt-filter-card { flex-direction: column !important; align-items: stretch !important; padding: 18px !important; }
+    .mgmt-filter-card > div { min-width: 0 !important; }
+    .mgmt-stats-row { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .mg-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .mg-bar-l { width: 80px !important; font-size: .75rem !important; }
+    .mg-bar-v { width: 60px !important; font-size: .75rem !important; }
+    .mg-role-chips { gap: 8px !important; }
+    .mg-role-chip { padding: 10px 12px !important; min-width: 0 !important; }
+    .mg-role-chip .rc { font-size: 1rem !important; }
+    .mg-role-chip .rn { font-size: .65rem !important; }
+    .mg-cfg-top { grid-template-columns: 1fr !important; }
+    .mg-cfg-card { padding: 20px !important; }
+    .mg-cfg-input-group { flex-direction: column !important; }
+    .mg-search-bar { flex-direction: column !important; }
+    .kb-tabs { gap: 6px !important; }
+    .kb-tab { padding: 9px 14px !important; font-size: .8rem !important; }
+    .kb-grid2 { grid-template-columns: 1fr !important; }
+    .mg-grid-2 { grid-template-columns: 1fr !important; }
+    .mg-detail-grid { grid-template-columns: 1fr !important; }
+    .mg-profile-hero { padding: 28px 18px !important; }
+    .mg-profile-stats { gap: 16px !important; flex-wrap: wrap !important; justify-content: center !important; }
+    .fb-stats { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+}
+
+@media (max-width: 480px) {
+    .mgmt-stats { grid-template-columns: 1fr !important; }
+    .mgmt-stat .mgmt-stat-val { font-size: 1.1rem !important; }
+    .mgmt-stat .mgmt-stat-label { font-size: .68rem !important; }
+    .mgmt-banner h1 { font-size: 1.15rem !important; }
+    .mgmt-bar-label { width: 60px !important; font-size: .7rem !important; }
+    .mgmt-bar-val { width: 50px !important; font-size: .68rem !important; }
+    .mgmt-stats-row { grid-template-columns: 1fr !important; }
+    .mg-as2 { grid-template-columns: 1fr !important; }
+    .mg-bar-l { width: 70px !important; font-size: .7rem !important; }
+    .mg-bar-v { width: 50px !important; font-size: .7rem !important; }
+    .mg-mini-stat h3 { font-size: 1.3rem !important; }
+    .kb-tab { padding: 8px 10px !important; font-size: .75rem !important; }
+    .fb-stats { grid-template-columns: 1fr !important; }
+}
+
+/* ============================================================
+   WORKSHOP PAGES — Inline grid fixes
+   ============================================================ */
+@media (max-width: 768px) {
+    .wd-stats { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+    .wd-stat-card { padding: 18px 16px !important; }
+    .wd-stat-card .wd-stat-value { font-size: 1.5rem !important; }
+    .wd-stat-card .wd-stat-label { font-size: .78rem !important; }
+    .wd-content { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .wd-banner { padding: 24px 18px !important; border-radius: 16px !important; }
+    .wd-banner h1 { font-size: 1.2rem !important; }
+    .wd-wrap { padding: 14px 10px 28px !important; }
+    .wd-table th, .wd-table td { padding: 10px 8px !important; font-size: .82rem !important; }
+    .wd-service-tag { margin: 0 4px 6px 0 !important; padding: 6px 12px !important; font-size: .8rem !important; }
+    .wd-action-link { padding: 12px 14px !important; font-size: .85rem !important; }
+    .wd-action-link .wd-action-icon { width: 38px !important; height: 38px !important; }
+    .rv-summary-inner { padding: 28px 16px 24px !important; }
+    .rv-avg-number { font-size: 2.5rem !important; }
+}
+
+@media (max-width: 480px) {
+    .wd-stats { grid-template-columns: 1fr !important; }
+    .wd-stat-card { padding: 16px 14px !important; }
+    .wd-stat-card .wd-stat-value { font-size: 1.3rem !important; }
+    .wd-banner h1 { font-size: 1.1rem !important; }
+    .wd-action-link { padding: 10px 12px !important; }
+}
+
+/* ============================================================
+   CUSTOMER PAGES — Inline grid fixes
+   ============================================================ */
+@media (max-width: 768px) {
+    .shop-profile-hero { flex-direction: column !important; text-align: center !important; padding: 24px 16px !important; gap: 16px !important; }
+    .shop-hero-stats { justify-content: center !important; }
+    .shop-chat-btn { width: 100% !important; justify-content: center !important; }
+    .shop-info-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+    .shop-products-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .shop-section { padding: 18px !important; }
+    .shop-product-card img { height: 120px !important; }
+    .return-hero { padding: 28px 18px !important; border-radius: 16px !important; }
+    .return-hero h1 { font-size: 1.4rem !important; }
+    .return-stats { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .return-stat { padding: 14px !important; }
+    .return-stat h3 { font-size: 1.3rem !important; }
+    .return-form-section { padding: 18px !important; }
+    .return-form-grid { grid-template-columns: 1fr !important; }
+    .return-card { flex-direction: column !important; gap: 12px !important; }
+    .return-card-img { width: 100% !important; height: 140px !important; }
+    .chat-page { height: calc(100vh - 120px) !important; max-height: calc(100vh - 120px) !important; }
+    .chat-header-bar, .chat-input-bar { padding: 10px 14px !important; }
+    .chat-body { padding: 12px !important; }
+    .chat-msg { max-width: 85% !important; padding: 10px 12px !important; }
+}
+
+@media (max-width: 480px) {
+    .shop-products-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .shop-product-card .sp-name { font-size: .8rem !important; }
+    .shop-product-card .sp-price { font-size: .82rem !important; }
+    .return-stats { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+    .return-stat { padding: 12px !important; }
+    .return-stat h3 { font-size: 1.1rem !important; }
+    .return-stat i { font-size: 1.1rem !important; }
+    .return-submit-btn { width: 100% !important; justify-content: center !important; }
+    .chat-msg { max-width: 92% !important; }
+    .chat-input-bar input { font-size: 16px !important; }
+}
+
+/* ============================================================
+   SIDEBAR TOGGLE BUTTON - Global (Admin, Shopkeeper, Workshop)
+   ============================================================ */
+.admin-sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 65px;
+    left: 14px;
+    z-index: 1001;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #e94560, #ff6b81) !important;
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(233,69,96,0.4);
+    transition: all 0.3s;
+}
+.admin-sidebar-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(233,69,96,0.5);
+}
+.admin-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+.admin-sidebar-overlay.active {
+    display: block;
+}
+
+@media (max-width: 600px) {
+    .admin-sidebar-toggle { display: flex !important; }
+}
+
+/* ============================================================
+   MANAGER ANALYTICS - Responsive
+   ============================================================ */
+@media (max-width: 768px) {
+    .mgmt-wrap { padding: 16px 12px 60px !important; }
+    .mg-stats-row { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .mg-as { padding: 16px !important; }
+    .mg-as .val { font-size: 1.2rem !important; }
+    .mg-as .lbl { font-size: .65rem !important; }
+    .mg-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .mg-role-chips { flex-direction: column !important; gap: 8px !important; }
+    .mg-role-chip { min-width: 100% !important; padding: 10px 14px !important; }
+    .mg-bar-l { width: 70px !important; font-size: .72rem !important; }
+    .mg-bar-v { width: 55px !important; font-size: .72rem !important; }
+    .mg-bar-f { font-size: .65rem !important; padding: 0 6px !important; }
+    .mg-card-h { padding: 14px 16px !important; }
+    .mg-card-h h5 { font-size: .88rem !important; }
+    .mg-card-b { padding: 14px 16px !important; }
+    .mg-mini-stat h3 { font-size: 1.3rem !important; }
+    .mg-appoint-row { gap: 8px !important; }
+    .mg-appoint-name { font-size: .8rem !important; }
+    .mg-appoint-val { font-size: .88rem !important; }
+}
+
+@media (max-width: 480px) {
+    .mg-stats-row { grid-template-columns: 1fr !important; gap: 8px !important; }
+    .mg-as { padding: 14px !important; }
+    .mg-as .val { font-size: 1.1rem !important; }
+    .mg-role-chip { flex-direction: row !important; gap: 10px !important; }
+    .mg-bar-l { width: 60px !important; font-size: .68rem !important; }
+    .mg-bar-v { width: 48px !important; font-size: .68rem !important; }
+}
+
+/* ============================================================
+   SHOPKEEPER ORDERS - Action Buttons Responsive
+   ============================================================ */
+.order-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+.order-action-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.order-action-form-next {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .order-action-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    .order-action-form {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .order-action-form .form-select {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+    .order-action-form .btn-sm-modern {
+        flex: 1 !important;
+    }
+    .order-action-form-next {
+        width: 100% !important;
+    }
+    .order-action-form-next .btn-sm-modern {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
