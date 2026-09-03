@@ -111,14 +111,22 @@ The application does **not** create tables. It expects them to exist.
 
 ## Environment variables
 
-See `.env.example` for the full list. Both `DB_*` and Railway-style `MYSQL*` variables are accepted.
+See `.env.example` for the full list. The app accepts **both** naming conventions for the database:
 
 ```env
+# Option A — generic MySQL (PlanetScale, AWS RDS, local, …)
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=wrench_parts_db
 DB_USER=root
 DB_PASSWORD=
+
+# Option B — Railway MySQL (auto-populated from Railway service variables)
+MYSQLHOST=mysql.railway.internal
+MYSQLPORT=3306
+MYSQLDATABASE=railway
+MYSQLUSER=root
+MYSQLPASSWORD=
 
 SITE_URL=http://localhost:8000
 FRONTEND_URL=http://localhost:8000
@@ -140,9 +148,25 @@ STORAGE_ACCESS_KEY=
 STORAGE_SECRET_KEY=
 STORAGE_BUCKET=
 STORAGE_PUBLIC_URL=
+
+ENVIRONMENT=development          # development | production
 ```
 
 If `GEMINI_API_KEY` is missing, the chatbot still works using the local knowledge base (graceful fallback).
+
+### Railway MySQL quick-start
+
+1. In your Railway project, add a **MySQL** plugin.
+2. Copy the auto-generated `MYSQLHOST`, `MYSQLPORT`, `MYSQLDATABASE`, `MYSQLUSER`, `MYSQLPASSWORD` into your `.env` (or paste them into Vercel environment variables).
+3. Import your schema once:
+   ```bash
+   mysql -h <MYSQLHOST> -P <MYSQLPORT> -u <MYSQLUSER> -p<MYSQLPASSWORD> wrench_parts_db < database/database.sql
+   mysql -h <MYSQLHOST> -P <MYSQLPORT> -u <MYSQLUSER> -p<MYSQLPASSWORD> wrench_parts_db < database/advanced_features.sql
+   mysql -h <MYSQLHOST> -P <MYSQLPORT> -u <MYSQLUSER> -p<MYSQLPASSWORD> wrench_parts_db < database/knowledge_base.sql
+   mysql -h <MYSQLHOST> -P <MYSQLPORT> -u <MYSQLUSER> -p<MYSQLPASSWORD> wrench_parts_db < database/rag_vectors.sql
+   mysql -h <MYSQLHOST> -P <MYSQLPORT> -u <MYSQLUSER> -p<MYSQLPASSWORD> wrench_parts_db < database/kb_problems_seed.sql
+   ```
+   (Railway's default database name is `railway`; substitute it for `wrench_parts_db` above if you kept the default.)
 
 ---
 
