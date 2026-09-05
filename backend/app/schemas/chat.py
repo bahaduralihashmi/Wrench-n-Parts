@@ -1,4 +1,5 @@
 from typing import Optional, List
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,7 +11,7 @@ class ChatMessageOut(BaseModel):
     receiver_id: int
     message: str
     is_read: int
-    created_at: Optional[str] = None
+    created_at: Optional[datetime] = None
     sender_name: Optional[str] = None
 
 

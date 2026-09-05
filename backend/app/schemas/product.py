@@ -1,4 +1,5 @@
-from typing import Optional, List
+from typing import Optional, List, Union
+from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 from decimal import Decimal
 
@@ -35,8 +36,8 @@ class ProductOut(BaseModel):
     car_model: Optional[str] = None
     compatible_vehicles: Optional[str] = None
     status: str
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     shop_name: Optional[str] = None
     category_name: Optional[str] = None
 
