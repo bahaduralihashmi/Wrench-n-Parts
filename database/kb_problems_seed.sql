@@ -1,5 +1,5 @@
-﻿-- 530 Problem Diagnostic Database - Part 1 (Engine + Transmission, IDs 1-100)
-INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
+-- 530 Problem Diagnostic Database - Part 1 (Engine + Transmission, IDs 1-100)
+INSERT IGNORE INTO kb_problems (`system`, problem, symptoms, causes, solution) VALUES
 ('Engine','Engine Won''t Start','Cranks but no start, no spark, no fuel','Bad ignition coil, bad spark plug, faulty ECU, bad crankshaft position sensor, no fuel pressure','Check spark, fuel pressure, crankshaft sensor, ECU fault codes; replace faulty parts'),
 ('Engine','Engine Misfire','Rough idle, hesitation, loss of power, check engine light','Bad spark plug, bad ignition coil, vacuum leak, injector problem, low compression','Replace plugs/coils, check vacuum, test injectors, compression test'),
 ('Engine','Engine Overheating','Temperature gauge high, steam from hood, coolant loss','Low coolant, bad thermostat, bad water pump, radiator clogged, head gasket failure','Check coolant level, thermostat, water pump, radiator flush, head gasket test'),
@@ -101,7 +101,7 @@ INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
 ('Transmission','Axle Shaft Worn','Clicking on turns, vibration','Worn CV joint, boot damage','Replace axle shaft'),
 ('Transmission','4WD/AWD Issues','No drive to rear, warning light','Bad clutch, actuator, transfer case','Check transfer case, actuators');
 -- 530 Problem Diagnostic Database - Part 2 (Brake + Suspension, IDs 101-200)
-INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
+INSERT IGNORE INTO kb_problems (`system`, problem, symptoms, causes, solution) VALUES
 ('Brake','Brake Pedal Spongy','Soft brake pedal, longer stopping','Air in lines, low fluid, bad master cylinder','Bleed brakes, check fluid, master cylinder'),
 ('Brake','Brake Pedal Goes to Floor','Pedal sinks to floor','Fluid leak, bad master cylinder, bad seal','Inspect for leaks, replace master cylinder'),
 ('Brake','Brake Pedal Hard','Stiff pedal, hard to press','Bad brake booster, vacuum leak, clogged lines','Check booster, vacuum, lines'),
@@ -203,7 +203,7 @@ INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
 ('Suspension','Wheel Bearing Worn','Humming, grinding, loose wheel','Worn bearing','Replace wheel bearing'),
 ('Suspension','Coil Spring Sag','Car leans, ride low','Fatigue','Replace springs');
 -- 530 Problem Diagnostic Database - Part 3 (Electrical + Cooling + AC, IDs 201-350)
-INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
+INSERT IGNORE INTO kb_problems (`system`, problem, symptoms, causes, solution) VALUES
 ('Electrical','Battery Dead','No crank, dim lights','Old battery, parasitic drain','Jump start, replace battery, find drain'),
 ('Electrical','Battery Won''t Hold Charge','Dies quickly','Bad battery, alternator, drain','Test battery/alternator, fix drain'),
 ('Electrical','Corroded Battery Terminals','No start, poor connection','Corrosion, acid','Clean terminals'),
@@ -355,7 +355,7 @@ INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
 ('AC','AC Compressor Seal Leak','Oil at compressor','Worn seal','Replace seal/compressor'),
 ('AC','AC Not Working After Repair','Still no AC','Incorrect charge, leaks','Verify charge, leak test');
 -- 530 Problem Diagnostic Database - Part 4 (Fuel + Hybrid + EV + Sensors, IDs 351-530)
-INSERT INTO kb_problems (system, problem, symptoms, causes, solution) VALUES
+INSERT IGNORE INTO kb_problems (`system`, problem, symptoms, causes, solution) VALUES
 ('Fuel','Fuel Pump Failure','No start, stalls','Worn pump, clogged filter','Replace pump, filter'),
 ('Fuel','Fuel Pump Noisy','Whine from tank','Worn pump, low fuel','Replace pump'),
 ('Fuel','Fuel Filter Clogged','Loss of power, stall','Dirt','Replace filter'),

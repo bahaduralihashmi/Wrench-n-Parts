@@ -45,7 +45,7 @@ for f in files:
         print(f"  SKIP {f} (not found)")
         continue
     print(f"  RUN  {f}")
-    sql = path.read_text(encoding="utf-8")
+    sql = path.read_text(encoding="utf-8-sig")
     # Strip comments and split on semicolons
     statements = []
     buf = []

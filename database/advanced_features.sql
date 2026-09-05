@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS kb_pending_review (
     id INT AUTO_INCREMENT PRIMARY KEY,
     source_type ENUM('user_feedback','admin_entry','auto_extract') NOT NULL,
     source_id INT,
-    system VARCHAR(60),
+    `system` VARCHAR(60),
     problem VARCHAR(255),
     symptoms TEXT,
     causes TEXT,
