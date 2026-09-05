@@ -8,7 +8,7 @@ USE wrench_parts_db;
 -- ============================================
 -- USERS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- ============================================
 -- CATEGORIES TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS categories (
+CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     category_name VARCHAR(100) NOT NULL,
     category_image VARCHAR(255) DEFAULT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS categories (
 -- ============================================
 -- SHOPS TABLE (Shopkeeper's shop)
 -- ============================================
-CREATE TABLE IF NOT EXISTS shops (
+CREATE TABLE shops (
     shop_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     shop_name VARCHAR(150) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS shops (
 -- ============================================
 -- PRODUCTS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     shop_id INT NOT NULL,
     category_id INT,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS products (
 -- ============================================
 -- WORKSHOPS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS workshops (
+CREATE TABLE workshops (
     workshop_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     workshop_name VARCHAR(150) NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS workshops (
 -- ============================================
 -- ORDERS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS orders (
 -- ============================================
 -- ORDER ITEMS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS order_items (
+CREATE TABLE order_items (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
     product_id INT NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 -- ============================================
 -- APPOINTMENTS TABLE (Workshop Bookings)
 -- ============================================
-CREATE TABLE IF NOT EXISTS appointments (
+CREATE TABLE appointments (
     appointment_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
     workshop_id INT NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS appointments (
 -- ============================================
 -- CART TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS cart (
+CREATE TABLE cart (
     cart_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     product_id INT NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS cart (
 -- ============================================
 -- WISHLIST TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS wishlist (
+CREATE TABLE wishlist (
     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     product_id INT NOT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS wishlist (
 -- ============================================
 -- CHAT MESSAGES TABLE (User-to-User Chat)
 -- ============================================
-CREATE TABLE IF NOT EXISTS chat_messages (
+CREATE TABLE chat_messages (
     message_id INT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT NOT NULL,
     receiver_id INT NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 -- ============================================
 -- CHATBOT LOGS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS chatbot_logs (
+CREATE TABLE chatbot_logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT DEFAULT NULL,
     question TEXT NOT NULL,
@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS chatbot_logs (
 -- ============================================
 -- REVIEWS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE reviews (
     review_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     product_id INT DEFAULT NULL,
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 -- ============================================
 -- NOTIFICATIONS TABLE
 -- ============================================
-CREATE TABLE IF NOT EXISTS notifications (
+CREATE TABLE notifications (
     notification_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
@@ -233,7 +233,7 @@ CREATE TABLE IF NOT EXISTS notifications (
 -- MECHBOT AI KNOWLEDGE BASE (RAG) TABLES
 -- Import full seed data from knowledge_base.sql
 -- ============================================
-CREATE TABLE IF NOT EXISTS kb_articles (
+CREATE TABLE kb_articles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     category ENUM('repair_guide','service_interval','torque_spec','general') NOT NULL DEFAULT 'general',
@@ -242,17 +242,17 @@ CREATE TABLE IF NOT EXISTS kb_articles (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS kb_dtc_codes (
+CREATE TABLE kb_dtc_codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(10) NOT NULL UNIQUE,
-    `system` VARCHAR(50) NOT NULL,
+    system VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
     causes TEXT,
     fixes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS kb_faqs (
+CREATE TABLE kb_faqs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
     answer TEXT NOT NULL,
@@ -260,18 +260,18 @@ CREATE TABLE IF NOT EXISTS kb_faqs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS kb_problems (
+CREATE TABLE kb_problems (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    `system` VARCHAR(60) NOT NULL,
+    system VARCHAR(60) NOT NULL,
     problem VARCHAR(255) NOT NULL,
     symptoms TEXT,
     causes TEXT,
     solution TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX (`system`)
+    INDEX (system)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS chatbot_conversations (
+CREATE TABLE chatbot_conversations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NULL,
     session_id VARCHAR(64) NOT NULL,
@@ -282,13 +282,13 @@ CREATE TABLE IF NOT EXISTS chatbot_conversations (
     INDEX (user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS chatbot_state (
-    session_id VARCHAR(64) NOT NULL PRIMARY KEY,
+CREATE TABLE chatbot_state (
+    session_id VARCHAR(64) NOT NULL PRIMARY,
     state JSON NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS kb_embeddings (
+CREATE TABLE kb_embeddings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     source_type ENUM('problem','article','dtc','faq') NOT NULL,
     source_id INT NOT NULL,
@@ -298,7 +298,7 @@ CREATE TABLE IF NOT EXISTS kb_embeddings (
     UNIQUE KEY uq_src (source_type, source_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS system_settings (
+CREATE TABLE system_settings (
     setting_id INT AUTO_INCREMENT PRIMARY KEY,
     setting_key VARCHAR(100) NOT NULL UNIQUE,
     setting_value TEXT,
@@ -310,27 +310,27 @@ CREATE TABLE IF NOT EXISTS system_settings (
 -- ============================================
 
 -- Default Admin User (password: admin123)
-INSERT IGNORE INTO users (name, email, password, phone, role, status) VALUES
+INSERT INTO users (name, email, password, phone, role, status) VALUES
 ('Administrator', 'admin@wrenchnparts.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '1234567890', 'admin', 'active');
 
 -- Default Management User (password: mgmt123)
-INSERT IGNORE INTO users (name, email, password, phone, role, status) VALUES
+INSERT INTO users (name, email, password, phone, role, status) VALUES
 ('Manager', 'manager@wrenchnparts.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '1234567891', 'management', 'active');
 
 -- Default Shopkeeper (password: shop123)
-INSERT IGNORE INTO users (name, email, password, phone, role, status) VALUES
+INSERT INTO users (name, email, password, phone, role, status) VALUES
 ('Parts Hub Owner', 'shop@wrenchnparts.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '1234567892', 'shopkeeper', 'active');
 
 -- Default Workshop Owner (password: work123)
-INSERT IGNORE INTO users (name, email, password, phone, role, status) VALUES
+INSERT INTO users (name, email, password, phone, role, status) VALUES
 ('AutoFix Workshop', 'workshop@wrenchnparts.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '1234567893', 'workshop', 'active');
 
 -- Default Customer (password: cust123)
-INSERT IGNORE INTO users (name, email, password, phone, role, status) VALUES
+INSERT INTO users (name, email, password, phone, role, status) VALUES
 ('John Customer', 'customer@wrenchnparts.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '1234567894', 'customer', 'active');
 
 -- Categories
-INSERT IGNORE INTO categories (category_name, description) VALUES
+INSERT INTO categories (category_name, description) VALUES
 ('Engine Parts', 'Pistons, gaskets, cylinder heads, and engine blocks'),
 ('Brake System', 'Brake pads, discs, calipers, and brake fluid'),
 ('Electrical', 'Batteries, alternators, starters, and wiring'),
@@ -343,15 +343,15 @@ INSERT IGNORE INTO categories (category_name, description) VALUES
 ('Tires & Wheels', 'All tire sizes and alloy wheels');
 
 -- Default Shop
-INSERT IGNORE INTO shops (user_id, shop_name, description, location, contact, status) VALUES
+INSERT INTO shops (user_id, shop_name, description, location, contact, status) VALUES
 (3, 'Wrench n Parts Hub', 'Your one-stop shop for all automobile spare parts', '123 Auto Street, Mechanical District', '1234567892', 'active');
 
 -- Default Workshop
-INSERT IGNORE INTO workshops (user_id, workshop_name, description, location, contact, services, status) VALUES
+INSERT INTO workshops (user_id, workshop_name, description, location, contact, services, status) VALUES
 (4, 'AutoFix Workshop', 'Professional automobile repair and maintenance services', '456 Repair Road, Service Zone', '1234567893', 'Engine Repair,Brake Service,AC Service,Wheel Alignment,Oil Change,General Servicing', 'active');
 
 -- Sample Products
-INSERT IGNORE INTO products (shop_id, category_id, product_name, description, price, stock, brand, compatible_vehicles, status) VALUES
+INSERT INTO products (shop_id, category_id, product_name, description, price, stock, brand, compatible_vehicles, status) VALUES
 (1, 1, 'Piston Ring Set', 'High-quality piston ring set for most sedans', 45.99, 50, 'Bosch', 'Toyota, Honda, Nissan', 'available'),
 (1, 2, 'Ceramic Brake Pads (Front)', 'Premium ceramic brake pads - front pair', 32.50, 100, 'Brembo', 'Universal Fit', 'available'),
 (1, 3, 'Car Battery 12V 60Ah', 'Maintenance-free car battery with 2-year warranty', 89.99, 30, 'Exide', 'Universal Fit', 'available'),
@@ -364,7 +364,7 @@ INSERT IGNORE INTO products (shop_id, category_id, product_name, description, pr
 (1, 10, 'All-Season Tire 205/55R16', 'All-season performance tire', 75.00, 60, 'Michelin', 'Universal 16-inch', 'available');
 
 -- System Settings
-INSERT IGNORE INTO system_settings (setting_key, setting_value) VALUES
+INSERT INTO system_settings (setting_key, setting_value) VALUES
 ('site_name', 'Wrench n Parts'),
 ('site_email', 'info@wrenchnparts.com'),
 ('site_phone', '+1-800-WRENCH'),

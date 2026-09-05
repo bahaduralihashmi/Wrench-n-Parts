@@ -1,5 +1,4 @@
 from typing import Optional, List
-from datetime import datetime
 from decimal import Decimal
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -60,8 +59,8 @@ class OrderOut(BaseModel):
     payment_status: str
     order_status: str
     notes: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
     items: List[OrderItemOut] = []
     customer_name: Optional[str] = None
     customer_email: Optional[str] = None

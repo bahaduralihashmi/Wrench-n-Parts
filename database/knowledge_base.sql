@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS kb_articles (
 CREATE TABLE IF NOT EXISTS kb_dtc_codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     code VARCHAR(10) NOT NULL UNIQUE,
-    `system` VARCHAR(50) NOT NULL,
+    system VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
     causes TEXT,
     fixes TEXT,
@@ -35,13 +35,13 @@ CREATE TABLE IF NOT EXISTS kb_faqs (
 -- Expert Problem Diagnostics (530 problems: symptoms -> causes -> solution)
 CREATE TABLE IF NOT EXISTS kb_problems (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    `system` VARCHAR(60) NOT NULL,
+    system VARCHAR(60) NOT NULL,
     problem VARCHAR(255) NOT NULL,
     symptoms TEXT,
     causes TEXT,
     solution TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX (`system`)
+    INDEX (system)
 ) ENGINE=InnoDB;
 
 -- Conversation Memory (per browser session / user)
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS chatbot_conversations (
 
 -- Multi-turn conversation state (collected vehicle info per session)
 CREATE TABLE IF NOT EXISTS chatbot_state (
-    session_id VARCHAR(64) NOT NULL PRIMARY KEY,
+    session_id VARCHAR(64) NOT NULL PRIMARY,
     state JSON NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS kb_embeddings (
 -- ============================================
 
 -- Repair Guides
-INSERT IGNORE INTO kb_articles (title, category, keywords, content) VALUES
+INSERT INTO kb_articles (title, category, keywords, content) VALUES
 ('Jump Starting a Dead Battery', 'repair_guide', 'jump start battery dead boost cables terminals',
  'Safety first: NEVER connect cables to battery terminals while the other car is running. Steps: 1) Park cars close but NOT touching. 2) Turn both cars off. 3) Connect RED clamp to dead battery (+) terminal, then other RED end to working battery (+). 4) Connect BLACK clamp to working battery (-), then the other BLACK end to an unpainted metal bolt on the dead car engine block (NOT the battery). 5) Start the working car, wait 2 minutes, then start the dead car. 6) Remove cables in REVERSE order. If the car does not start within 5 attempts, the battery is likely dead beyond jump starting - it may need replacement. Battery signs: slow crank, dim lights, click-click sound.'),
 ('How to Check Engine Oil Level', 'repair_guide', 'engine oil level dipstick check change top up',
@@ -106,7 +106,7 @@ INSERT IGNORE INTO kb_articles (title, category, keywords, content) VALUES
  'Brake fluid is hygroscopic - it absorbs water over time, which lowers the boiling point and causes brake fade. Replace every 2 years or 40,000 km. Check level in the reservoir (MAX mark). If fluid drops quickly, there is a leak in the system - very dangerous. Spongy brake pedal = air or water in the system (bleed the brakes). Never mix DOT 3 and DOT 5 fluids. Fluid on the ground under the car near wheels = check brake lines and calipers immediately.');
 
 -- Service Intervals
-INSERT IGNORE INTO kb_articles (title, category, keywords, content) VALUES
+INSERT INTO kb_articles (title, category, keywords, content) VALUES
 ('Engine Oil Service Interval', 'service_interval', 'engine oil change interval km synthetic conventional 5000 7500 10000',
  'Engine oil: synthetic oil every 7,500-10,000 km or 12 months (whichever first). Conventional mineral oil: every 5,000 km or 6 months. Always replace the oil FILTER with the oil change. For heavy/dusty city driving, shorten intervals by 20-30%.'),
 ('Brake Pads & Rotors Service Interval', 'service_interval', 'brake pad rotor interval km replace disc 30000 50000',
@@ -133,7 +133,7 @@ INSERT IGNORE INTO kb_articles (title, category, keywords, content) VALUES
  'Car battery: 3-5 years typical life. Test voltage yearly after 3 years (healthy: 12.4-12.6V at rest). Clean terminals of corrosion (baking soda + water). In winter, batteries fail 2x more often.');
 
 -- Torque Specs
-INSERT IGNORE INTO kb_articles (title, category, keywords, content) VALUES
+INSERT INTO kb_articles (title, category, keywords, content) VALUES
 ('Common Torque Specifications', 'torque_spec', 'torque nm ft-lb lug nut spark plug oil drain plug wheel bolt spec',
  'Common torque specs (always confirm with your service manual):\n- Spark plugs: 20-30 Nm (15-22 ft-lb)\n- Engine oil drain plug: 25-35 Nm (18-26 ft-lb)\n- Wheel lug nuts: 90-120 Nm (65-90 ft-lb); alloy wheels often 100-110 Nm\n- Oil filter: hand-tight + 3/4 turn (never use a wrench to install)\n- Caliper bolts: 80-100 Nm (60-75 ft-lb)\n- Strut top nuts: 30-40 Nm (22-30 ft-lb)\nOver-tightening lug nuts warps brake rotors; under-tightening is a safety hazard. Use a torque wrench in a star pattern.'),
 ('Engine Oil Drain Plug Torque', 'torque_spec', 'drain plug torque nm 25 30 35 over tighten strip',
@@ -142,7 +142,7 @@ INSERT IGNORE INTO kb_articles (title, category, keywords, content) VALUES
  'Steel wheels: 90-100 Nm (65-75 ft-lb). Alloy wheels: 100-110 Nm (75-80 ft-lb). Always tighten in a STAR pattern, never clockwise around. Re-torque after 100 km of driving.');
 
 -- DTC Codes
-INSERT IGNORE INTO kb_dtc_codes (code, `system`, description, causes, fixes) VALUES
+INSERT INTO kb_dtc_codes (code, system, description, causes, fixes) VALUES
 ('P0300', 'Engine', 'Random / Multiple Cylinder Misfire Detected', 'Bad spark plugs or coils, vacuum leak, fuel injector clogged, low compression, intake manifold gasket leak', 'Read live misfire counters, test coils/plugs, check vacuum lines, fuel pressure and compression; replace faulty parts; clear code and test drive'),
 ('P0301', 'Engine', 'Cylinder 1 Misfire Detected', 'Faulty spark plug or ignition coil on cyl 1, injector problem, low compression in cyl 1', 'Swap coil with another cylinder to test (if misfire follows, coil is bad), check plug gap and fuel injector on cyl 1'),
 ('P0302', 'Engine', 'Cylinder 2 Misfire Detected', 'Faulty spark plug or ignition coil on cyl 2, injector problem, low compression', 'Swap coil test, inspect plug, injector pulse and compression on cylinder 2'),
@@ -165,7 +165,7 @@ INSERT IGNORE INTO kb_dtc_codes (code, `system`, description, causes, fixes) VAL
 ('C0035', 'ABS', 'Left Front Wheel Speed Sensor Circuit', 'Faulty wheel speed sensor, damaged wiring, corroded connector, dirty sensor tip', 'Check sensor gap and cleanliness, test resistance, inspect harness, replace sensor');
 
 -- FAQs
-INSERT IGNORE INTO kb_faqs (question, answer, category) VALUES
+INSERT INTO kb_faqs (question, answer, category) VALUES
 ('Do you provide warranty on parts?', 'Yes! Batteries come with a 2-year warranty, and most other parts include a manufacturer warranty. Keep your receipt. Warranty covers manufacturing defects, not damage from improper installation or accidents.', 'policies'),
 ('What is the return policy?', 'Unused parts in original packaging can be returned within 14 days of delivery. Electrical parts once installed cannot be returned. Contact support with your order number to start a return.', 'policies'),
 ('How long does delivery take?', 'Within the same city: 1-2 working days. Other cities: 3-5 working days. Delivery is free on orders above Rs. 5,000. You can track your order status in your customer dashboard.', 'orders'),

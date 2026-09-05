@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 
 _settings = get_settings()
 engine = create_engine(
-    _settings.resolved_database_url,
+    _settings.database_url,
     pool_pre_ping=True,
     pool_recycle=3600,
     future=True,
